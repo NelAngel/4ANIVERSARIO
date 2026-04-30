@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Cuenta Regresiva • Nely 💖</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(ellipse at center, #4a1028 0%, #2a0618 60%, #14010c 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Quicksand', sans-serif;
+            padding: 1.2rem;
+            margin: 0;
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        /* Canvas para fotos, corazones y globos volando */
+        #heartsCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Overlay para foto ampliada al hacer clic */
+        .photo-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 100;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+        }
+
+        .photo-overlay.active {
+            display: flex;
+        }
+
+        .photo-overlay .enlarged-photo {
+            max-width: 80vw;
+            max-height: 60vh;
+            border-radius: 2rem;
+            border: 5px solid #ffb6c1;
+            box-shadow: 0 0 60px #ff3864, 0 20px 40px rgba(0,0,0,0.8);
+            object-fit: contain;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .photo-overlay .year-message {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            color: #ffb6c1;
+            text-shadow: 0 0 30px #ff2d55, 0 0 60px #ff1744;
+            margin-top: 1.5rem;
+            text-align: center;
+            animation: fadeInUp 0.6s ease-out;
+            padding: 0 2rem;
+        }
+
+        @keyframes fadeInUp {
+            0% { transform: translateY(30px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .photo-overlay .close-hint {
+            color: rgba(255,255,255,0.6);
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* ========== OVERLAY DEL BOTÓN "ENTRAR" (DÍA DEL ANIVERSARIO) ========== */
+        .enter-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 200;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            backdrop-filter: blur(10px);
+        }
+
+        .enter-overlay.active {
+            display: flex;
+        }
+
+        .enter-message {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4rem;
+            color: #ffb6c1;
+            text-shadow: 0 0 40px #ff2d55, 0 0 80px #ff1744, 0 0 120px #ff3366;
+            text-align: center;
+            margin-bottom: 2rem;
+            animation: glowPulse 2s infinite;
+            padding: 0 2rem;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { text-shadow: 0 0 40px #ff2d55, 0 0 80px #ff1744; }
+            50% { text-shadow: 0 0 80px #ff4d7a, 0 0 140px #ff3366, 0 0 200px #ff1a4b; }
+        }
+
+        .enter-button {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            padding: 1.5rem 4rem;
+            background: linear-gradient(135deg, #ff3864, #ff1a4b);
+            color: white;
+            border: 4px solid #ffb6c1;
+            border-radius: 4rem;
+            cursor: pointer;
+            box-shadow: 0 0 60px #ff3864, 0 0 120px #ff1744, 0 20px 40px rgba(0,0,0,0.6);
+            transition: all 0.3s ease;
+            animation: buttonGlow 2s infinite, bounceIn 1s ease-out;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        @keyframes buttonGlow {
+            0%, 100% { box-shadow: 0 0 60px #ff3864, 0 0 120px #ff1744; }
+            50% { box-shadow: 0 0 100px #ff4d7a, 0 0 180px #ff3366, 0 0 250px #ff1a4b; }
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); opacity: 0; }
+            60% { transform: scale(1.1); opacity: 1; }
+            80% { transform: scale(0.95); }
+            100% { transform: scale(1); }
+        }
+
+        .enter-button:hover {
+            transform: scale(1.1);
+            background: linear-gradient(135deg, #ff4d7a, #ff2d55);
+            border-color: white;
+            box-shadow: 0 0 120px #ff4d7a, 0 0 200px #ff3864;
+        }
+
+        .enter-button:active {
+            transform: scale(0.95);
+        }
+
+        .enter-hearts {
+            font-size: 4rem;
+            animation: floatHearts 2s infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes floatHearts {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-20px) scale(1.1); }
+        }
+
+        /* Contenedor para imágenes precargadas (oculto) */
+        #imageLoader {
+            position: absolute;
+            width: 0;
+            height: 0;
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* ========== PÁGINA 1: CUENTA REGRESIVA ========== */
+        .countdown-page {
+            position: relative;
+            z-index: 20;
+            max-width: 650px;
+            width: 100%;
+            background: rgba(25, 4, 12, 0.5);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            background: linear-gradient(160deg, rgba(255, 200, 215, 0.2) 0%, rgba(180, 100, 125, 0.12) 100%);
+            border-radius: 4rem;
+            box-shadow: 0 35px 60px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(255, 130, 160, 0.55), inset 0 0 30px rgba(255, 80, 120, 0.25);
+            padding: 3rem 2rem;
+            text-align: center;
+            color: #fff0f5;
+            border: 1.5px solid rgba(255, 150, 175, 0.5);
+            animation: cardGlow 4s infinite alternate;
+            display: block;
+        }
+
+        /* ========== PÁGINA 2: ANIVERSARIO (oculta hasta hacer clic en "Entrar") ========== */
+        .anniversary-page {
+            position: relative;
+            z-index: 20;
+            max-width: 720px;
+            width: 100%;
+            background: rgba(25, 4, 12, 0.5);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            background: linear-gradient(160deg, rgba(255, 200, 215, 0.2) 0%, rgba(180, 100, 125, 0.12) 100%);
+            border-radius: 4rem 4rem 3.5rem 3.5rem;
+            box-shadow: 0 35px 60px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(255, 130, 160, 0.55), inset 0 0 30px rgba(255, 80, 120, 0.25);
+            padding: 2.5rem 2rem 2.8rem;
+            text-align: center;
+            color: #fff0f5;
+            border: 1.5px solid rgba(255, 150, 175, 0.5);
+            animation: cardGlow 4s infinite alternate;
+            display: none;
+        }
+
+        @keyframes cardGlow {
+            0% { box-shadow: 0 35px 60px rgba(0,0,0,0.7), 0 0 0 2px rgba(255,130,160,0.5), 0 0 30px #ff3366; }
+            100% { box-shadow: 0 35px 60px rgba(0,0,0,0.7), 0 0 0 2px rgba(255,130,160,0.8), 0 0 50px #ff4d7a; }
+        }
+
+        /* Estilos cuenta regresiva */
+        .countdown-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: #fff0f5;
+            text-shadow: 0 0 25px #ff2d55, 0 6px 18px #8b1e3a;
+            margin-bottom: 0.5rem;
+            letter-spacing: 3px;
+        }
+
+        .countdown-subtitle {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            font-weight: 600;
+            color: #ffd0d9;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 18px #d6336c;
+        }
+
+        .countdown-box {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+        }
+
+        .countdown-item {
+            background: rgba(20, 3, 12, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            padding: 1.5rem 1rem;
+            min-width: 85px;
+            border: 1px solid #ff8da1;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            transition: transform 0.3s;
+        }
+
+        .countdown-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .countdown-number {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #ffb7c5;
+            text-shadow: 0 0 25px #ff2150;
+            line-height: 1.2;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .countdown-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #f5ced7;
+            margin-top: 0.3rem;
+        }
+
+        .target-date {
+            font-size: 1.3rem;
+            color: #ffccd5;
+            margin: 1.5rem 0;
+            font-weight: 500;
+            background: rgba(0,0,0,0.3);
+            padding: 0.8rem 1.5rem;
+            border-radius: 2rem;
+            display: inline-block;
+        }
+
+        .heart-beat {
+            font-size: 3rem;
+            animation: heartBeat 1.2s infinite;
+            display: inline-block;
+        }
+
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            15% { transform: scale(1.3); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.2); }
+            60% { transform: scale(1); }
+        }
+
+        .message-love {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #ffeef2;
+            background: rgba(15, 2, 8, 0.5);
+            padding: 1.2rem 1.4rem;
+            border-radius: 2rem;
+            margin: 1.5rem 0;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 140, 160, 0.4);
+            font-style: italic;
+        }
+
+        /* Estilos página aniversario */
+        .photo-frame {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .couple-img {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #ffb6c1;
+            box-shadow: 0 0 45px #ff3864, 0 12px 30px rgba(0,0,0,0.7);
+            background: linear-gradient(135deg, #c94b62, #771f35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4.2rem;
+            color: white;
+            text-shadow: 0 2px 15px black;
+            margin: 0 auto;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            animation: softPulse 2.8s infinite;
+            overflow: hidden;
+        }
+
+        .couple-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        @keyframes softPulse {
+            0% { transform: scale(1); border-color: #ffb6c1; }
+            50% { transform: scale(1.04); border-color: #ff8da1; box-shadow: 0 0 55px #ff1a4b; }
+            100% { transform: scale(1); border-color: #ffb6c1; }
+        }
+
+        .names-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4.4rem;
+            font-weight: 700;
+            color: #fff0f5;
+            text-shadow: 0 0 25px #ff2d55, 0 6px 18px #8b1e3a;
+            margin: 0.5rem 0 0.2rem;
+            letter-spacing: 4px;
+            line-height: 1.1;
+        }
+
+        .subtitle {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #ffd0d9;
+            margin-bottom: 0.7rem;
+            text-shadow: 0 0 18px #d6336c;
+        }
+
+        .heart-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            margin: 1.3rem 0 1rem;
+            font-size: 2.2rem;
+            filter: drop-shadow(0 0 14px #ff2952);
+        }
+
+        .message {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            font-weight: 400;
+            color: #ffeef2;
+            background: rgba(15, 2, 8, 0.5);
+            padding: 1.6rem 1.4rem;
+            border-radius: 2.8rem;
+            margin: 1.4rem 0 1.8rem;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 140, 160, 0.55);
+            font-style: italic;
+            letter-spacing: 0.3px;
+        }
+
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+            justify-content: center;
+            margin: 1.6rem 0 1.3rem;
+        }
+
+        .mini-photo {
+            width: 85px;
+            height: 85px;
+            border-radius: 2rem;
+            background: linear-gradient(135deg, #e36b7e, #9e2d47);
+            box-shadow: 0 10px 22px rgba(0,0,0,0.5), 0 0 25px #ff4d6d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.4rem;
+            color: white;
+            border: 2px solid #ffc1cc;
+            transition: all 0.3s;
+            animation: floatMini 4s infinite ease-in-out;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .mini-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 2rem;
+        }
+        .mini-photo:nth-child(2) { animation-delay: 0.4s; }
+        .mini-photo:nth-child(3) { animation-delay: 0.8s; }
+        .mini-photo:nth-child(4) { animation-delay: 1.2s; }
+
+        @keyframes floatMini {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .mini-photo:hover {
+            transform: translateY(-7px) scale(1.08);
+            border-color: white;
+        }
+
+        .counter-section {
+            background: rgba(20, 3, 12, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 2.8rem;
+            padding: 1.3rem 1rem;
+            margin: 1.5rem 0 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            border: 1px solid #ff8da1;
+        }
+
+        .time-box {
+            text-align: center;
+            min-width: 70px;
+        }
+
+        .time-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #ffb7c5;
+            text-shadow: 0 0 22px #ff2150;
+            line-height: 1.2;
+        }
+
+        .time-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #f5ced7;
+        }
+
+        .love-note {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.3rem;
+            margin: 1.6rem 0 0.6rem;
+            color: #ffb6c1;
+            text-shadow: 0 0 30px #ff084a;
+        }
+
+        button {
+            background: rgba(180, 50, 75, 0.5);
+            border: 2px solid #ff99b4;
+            color: white;
+            padding: 0.8rem 2.3rem;
+            border-radius: 3rem;
+            font-size: 1.05rem;
+            font-weight: 600;
+            backdrop-filter: blur(12px);
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 0.6rem 0.4rem;
+            letter-spacing: 1px;
+            background: rgba(140, 30, 55, 0.65);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        button:hover {
+            background: #ff3864;
+            border-color: white;
+            box-shadow: 0 0 35px #ff1744;
+            transform: scale(1.05);
+            color: #fff;
+        }
+
+        .footer-hearts {
+            margin-top: 1.5rem;
+            font-size: 1.8rem;
+            letter-spacing: 7px;
+            color: #ff99aa;
+        }
+
+        .upload-hint {
+            font-size: 0.75rem;
+            color: #ffccd5;
+            margin-top: 0.3rem;
+            opacity: 0.8;
+        }
+
+        /* Confeti para el día del aniversario */
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 15;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            animation: confettiFall 4s ease-in forwards;
+        }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+        }
+
+        @media (max-width: 500px) {
+            .names-title {
+                font-size: 3.2rem;
+            }
+            .countdown-title {
+                font-size: 2.5rem;
+            }
+            .countdown-number {
+                font-size: 2.5rem;
+            }
+            .anniversary-page, .countdown-page {
+                padding: 2rem 1.2rem;
+            }
+            .photo-overlay .year-message {
+                font-size: 2.5rem;
+            }
+            .photo-overlay .enlarged-photo {
+                max-width: 90vw;
+                max-height: 50vh;
+            }
+            .enter-message {
+                font-size: 2.5rem;
+            }
+            .enter-button {
+                font-size: 1.8rem;
+                padding: 1rem 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Canvas para fotos, corazones y globos volando -->
+    <canvas id="heartsCanvas"></canvas>
+
+    <!-- Overlay para foto ampliada con mensaje del año -->
+    <div class="photo-overlay" id="photoOverlay">
+        <img class="enlarged-photo" id="enlargedPhoto" src="" alt="Recuerdo">
+        <div class="year-message" id="yearMessage"></div>
+        <div class="close-hint">💖 Toca para cerrar 💖</div>
+    </div>
+
+    <!-- ========== OVERLAY DEL BOTÓN "ENTRAR" (DÍA DEL ANIVERSARIO) ========== -->
+    <div class="enter-overlay" id="enterOverlay">
+        <div class="enter-hearts">💖💕💗</div>
+        <div class="enter-message">¡Llegó el día, Nely!<br>4 años de amor</div>
+        <button class="enter-button" id="enterButton">✨ ENTRAR ✨</button>
+    </div>
+
+    <!-- Cargador oculto de imágenes -->
+    <div id="imageLoader">
+        <img src="1.jpg" id="img1" onload="imageLoaded(1)" onerror="this.style.display='none'">
+        <img src="2.jpg" id="img2" onload="imageLoaded(2)" onerror="this.style.display='none'">
+        <img src="3.jpg" id="img3" onload="imageLoaded(3)" onerror="this.style.display='none'">
+        <img src="4.jpg" id="img4" onload="imageLoaded(4)" onerror="this.style.display='none'">
+        <img src="5.jpg" id="img5" onload="imageLoaded(5)" onerror="this.style.display='none'">
+        <img src="6.jpg" id="img6" onload="imageLoaded(6)" onerror="this.style.display='none'">
+        <img src="7.jpg" id="img7" onload="imageLoaded(7)" onerror="this.style.display='none'">
+        <img src="8.jpg" id="img8" onload="imageLoaded(8)" onerror="this.style.display='none'">
+        <img src="9.jpg" id="img9" onload="imageLoaded(9)" onerror="this.style.display='none'">
+        <img src="10.jpg" id="img10" onload="imageLoaded(10)" onerror="this.style.display='none'">
+        <img src="11.jpg" id="img11" onload="imageLoaded(11)" onerror="this.style.display='none'">
+        <img src="12.jpg" id="img12" onload="imageLoaded(12)" onerror="this.style.display='none'">
+    </div>
+
+    <!-- Confeti (solo visible el día del aniversario) -->
+    <div class="confetti-container" id="confettiContainer"></div>
+
+    <!-- ==================== PÁGINA 1: CUENTA REGRESIVA ==================== -->
+    <div class="countdown-page" id="countdownPage">
+        <div class="heart-beat">💖</div>
+        <h1 class="countdown-title">Nely, mi amor</h1>
+        <div class="countdown-subtitle">Nuestro aniversario se acerca...</div>
+        
+        <div class="countdown-box">
+            <div class="countdown-item">
+                <div class="countdown-number" id="countdownDays">24</div>
+                <div class="countdown-label">Días</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="countdownHours">0</div>
+                <div class="countdown-label">Horas</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="countdownMinutes">0</div>
+                <div class="countdown-label">Minutos</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="countdownSeconds">0</div>
+                <div class="countdown-label">Segundos</div>
+            </div>
+        </div>
+
+        <div class="target-date">
+            📅 <strong>24 de Mayo de 2026</strong> 📅
+        </div>
+
+        <div class="message-love">
+            Cada segundo que pasa es un latido más cerca de ti.<br>
+            Pronto celebraremos <strong>4 años</strong> del amor más hermoso.<br>
+            ¡Te amo Nely! 💕
+        </div>
+
+        <div class="footer-hearts">
+            ❤️ 💕 💗 💖 💘 💝
+        </div>
+    </div>
+
+    <!-- ==================== PÁGINA 2: ANIVERSARIO (oculta hasta hacer clic en "Entrar") ==================== -->
+    <div class="anniversary-page" id="anniversaryPage">
+        <div class="photo-frame">
+            <div class="couple-img" id="mainPhotoDisplay">
+                <img src="1.jpg" alt="Nely y yo" onerror="this.innerHTML='💖<span style=font-size:2rem;margin-left:6px;>Nely</span>'">
+            </div>
+        </div>
+        <div class="upload-hint">💡 Tu foto principal - ¡Preciosa!</div>
+
+        <h1 class="names-title">Nely & Yo</h1>
+        <div class="subtitle">¡4 años de amor eterno!</div>
+
+        <div class="heart-divider">
+            <span>❤️</span><span>✨</span><span>❤️</span><span>✨</span><span>❤️</span>
+        </div>
+
+        <div class="message">
+            Mi querida Nely,<br>
+            Hoy celebramos cuatro maravillosos años desde que unimos nuestras almas. Cada día a tu lado es un regalo lleno de risas, complicidad y un amor que crece sin medida. Eres mi inspiración, mi paz y mi más bello sueño hecho realidad.<br>
+            <strong>¡Feliz aniversario, mi amor! 💘</strong>
+        </div>
+
+        <div class="gallery">
+            <div class="mini-photo"><img src="1.jpg" alt="Año 1" onerror="this.innerHTML='📸💗'"></div>
+            <div class="mini-photo"><img src="2.jpg" alt="Año 2" onerror="this.innerHTML='🌹✨'"></div>
+            <div class="mini-photo"><img src="3.jpg" alt="Año 3" onerror="this.innerHTML='💌😊'"></div>
+            <div class="mini-photo"><img src="4.jpg" alt="Año 4" onerror="this.innerHTML='🎵💖'"></div>
+        </div>
+        <div class="upload-hint">💡 Galería de nuestros momentos especiales</div>
+
+        <div class="counter-section" id="anniversaryCounter">
+            <div class="time-box">
+                <div class="time-number" id="daysCount">0</div>
+                <div class="time-label">Días</div>
+            </div>
+            <div class="time-box">
+                <div class="time-number" id="hoursCount">0</div>
+                <div class="time-label">Horas</div>
+            </div>
+            <div class="time-box">
+                <div class="time-number" id="minutesCount">0</div>
+                <div class="time-label">Minutos</div>
+            </div>
+            <div class="time-box">
+                <div class="time-number" id="secondsCount">0</div>
+                <div class="time-label">Segundos</div>
+            </div>
+        </div>
+
+        <div class="love-note">✨ Nely, mi eterna compañera ✨</div>
+
+        <button id="surpriseBtn">💖 Toca para una sorpresa</button>
+        <button id="playMusicBtn">🎵 Música romántica</button>
+        
+        <div class="footer-hearts">
+            ❤️ 💕 💗 💖 💘 💝
+        </div>
+        <div style="margin-top:0.5rem; color:#ffb3c6; font-size:1rem;">#4AñosJuntos #NelyEresMiVida</div>
+    </div>
+
+    <script>
+        (function() {
+            // ========== FECHA OBJETIVO: 24 DE MAYO DE 2026 ==========
+            const anniversaryDate = new Date(2026, 4, 24, 0, 0, 0);
+            
+            // ========== MENSAJES POR AÑO ==========
+            const yearMessages = {
+                1: "💖 Año 1 • Donde todo comenzó\nNuestro primer año juntos, el inicio de nuestra historia de amor. ¡Gracias por decir que sí, Nely! 🌹",
+                2: "💕 Año 2 • Nuestro amor creció\nSegundo año de amor verdadero. Cada día a tu lado fue un regalo maravilloso. ✨",
+                3: "💗 Año 3 • Tres años de complicidad\nRisas, sueños y momentos inolvidables. ¡Eres mi todo, Nely! 💞",
+                4: "💘 Año 4 • Cuatro años de eternidad\nY mi amor por ti sigue creciendo sin medida. ¡Feliz aniversario! 💖",
+                5: "💝 Recuerdo especial • Año 1\nLos primeros momentos que compartimos juntos. ¡Qué hermosa aventura! 🌸",
+                6: "💓 Recuerdo especial • Año 2\nCuando supe que eras el amor de mi vida. 💑",
+                7: "💞 Recuerdo especial • Año 3\nNuestro amor se hacía más profundo cada día. 🌺",
+                8: "💖 Recuerdo especial • Año 4\nEl año que consolidó nuestro amor para siempre. 💍",
+                9: "✨ Momento mágico • Año 1\nDonde nuestras miradas se encontraron. 💫",
+                10: "🌹 Momento mágico • Año 2\nLas mariposas nunca se fueron. 💖",
+                11: "💎 Momento mágico • Año 3\nCada instante es un tesoro. 💝",
+                12: "👑 Momento mágico • Año 4\nReinando juntos en nuestro mundo. ¡Feliz aniversario Nely! 💘"
+            };
+            
+            // ========== CARGAR LAS 12 IMÁGENES ==========
+            const loadedImages = {};
+            let imagesLoadedCount = 0;
+            const totalImages = 12;
+            
+            window.imageLoaded = function(num) {
+                const img = document.getElementById('img' + num);
+                if (img && img.complete && !loadedImages[num] && img.naturalWidth > 0) {
+                    loadedImages[num] = img;
+                    imagesLoadedCount++;
+                    console.log(`✅ Foto ${num} cargada (${imagesLoadedCount}/${totalImages})`);
+                    
+                    if (imagesLoadedCount >= totalImages) {
+                        console.log('🎉 ¡Todas las fotos cargadas!');
+                        initCanvas();
+                    }
+                }
+            };
+            
+            setTimeout(() => {
+                for (let i = 1; i <= totalImages; i++) {
+                    const img = document.getElementById('img' + i);
+                    if (img && img.complete && img.naturalWidth > 0 && !loadedImages[i]) {
+                        window.imageLoaded(i);
+                    }
+                }
+                setTimeout(() => {
+                    if (imagesLoadedCount < totalImages) {
+                        console.log('⚠️ Algunas imágenes no cargaron, iniciando con ' + imagesLoadedCount + ' disponibles');
+                        initCanvas();
+                    }
+                }, 2000);
+            }, 500);
+            
+            // ========== OVERLAY PARA FOTO AMPLIADA ==========
+            const photoOverlay = document.getElementById('photoOverlay');
+            const enlargedPhoto = document.getElementById('enlargedPhoto');
+            const yearMessage = document.getElementById('yearMessage');
+            
+            photoOverlay.addEventListener('click', function() {
+                photoOverlay.classList.remove('active');
+            });
+            
+            // ========== CANVAS ==========
+            const canvas = document.getElementById('heartsCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            let width, height;
+            let flyingObjects = [];
+            let canvasInitialized = false;
+            
+            function resizeCanvas() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+            
+            class FlyingPhoto {
+                constructor(imgElement, photoNum) {
+                    this.img = imgElement;
+                    this.photoNum = photoNum;
+                    this.reset();
+                }
+                
+                reset() {
+                    this.x = Math.random() * width * 0.8 + width * 0.1;
+                    this.y = Math.random() * height * 0.6 + height * 0.2;
+                    this.size = Math.random() * 80 + 120;
+                    this.speedY = Math.random() * 0.5 + 0.25;
+                    this.speedX = (Math.random() - 0.5) * 0.4;
+                    this.opacity = Math.random() * 0.25 + 0.75;
+                    this.rotation = (Math.random() - 0.5) * 0.2;
+                    this.rotationSpeed = (Math.random() - 0.5) * 0.003;
+                    this.borderRadius = 20;
+                    this.borderColor = `rgba(255, ${Math.floor(Math.random()*100+150)}, ${Math.floor(Math.random()*100+150)}, 0.9)`;
+                }
+                
+                update() {
+                    this.y -= this.speedY;
+                    this.x += this.speedX + Math.sin(this.y * 0.008) * 0.2;
+                    this.rotation += this.rotationSpeed;
+                    if (this.y < -this.size * 2) {
+                        this.y = height + this.size;
+                        this.x = Math.random() * width * 0.8 + width * 0.1;
+                    }
+                    if (this.x < -this.size) this.x = width + this.size;
+                    if (this.x > width + this.size) this.x = -this.size;
+                }
+                
+                draw(ctx) {
+                    if (!this.img || !this.img.complete || this.img.naturalWidth === 0) return;
+                    ctx.save();
+                    ctx.translate(this.x, this.y);
+                    ctx.rotate(this.rotation);
+                    ctx.globalAlpha = this.opacity;
+                    ctx.shadowColor = 'rgba(255, 80, 130, 0.7)';
+                    ctx.shadowBlur = 20;
+                    ctx.strokeStyle = this.borderColor;
+                    ctx.lineWidth = 4;
+                    const halfSize = this.size / 2;
+                    ctx.beginPath();
+                    ctx.roundRect(-halfSize, -halfSize * 0.8, this.size, this.size * 0.8, this.borderRadius);
+                    ctx.clip();
+                    ctx.drawImage(this.img, -halfSize, -halfSize * 0.8, this.size, this.size * 0.8);
+                    ctx.stroke();
+                    ctx.restore();
+                }
+                
+                isClicked(mouseX, mouseY) {
+                    const halfSize = this.size / 2;
+                    return mouseX >= this.x - halfSize && 
+                           mouseX <= this.x + halfSize && 
+                           mouseY >= this.y - halfSize * 0.8 && 
+                           mouseY <= this.y + halfSize * 0.8;
+                }
+            }
+            
+            class FlyingHeart {
+                constructor() {
+                    this.reset();
+                }
+                
+                reset() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height * 0.8 + height * 0.2;
+                    this.size = Math.random() * 22 + 12;
+                    this.speedY = Math.random() * 1.2 + 0.6;
+                    this.speedX = (Math.random() - 0.5) * 0.8;
+                    this.opacity = Math.random() * 0.5 + 0.35;
+                    this.rotation = Math.random() * Math.PI * 2;
+                    this.rotationSpeed = (Math.random() - 0.5) * 0.025;
+                    const r = Math.floor(Math.random() * 60 + 195);
+                    const g = Math.floor(Math.random() * 80 + 80);
+                    const b = Math.floor(Math.random() * 100 + 130);
+                    this.color = `rgba(${r}, ${g}, ${b}, ${this.opacity})`;
+                }
+                
+                update() {
+                    this.y -= this.speedY;
+                    this.x += this.speedX + Math.sin(this.y * 0.02) * 0.35;
+                    this.rotation += this.rotationSpeed;
+                    if (this.y < -this.size * 2.5) {
+                        this.y = height + this.size * 1.5;
+                        this.x = Math.random() * width;
+                    }
+                    if (this.x < -this.size) this.x = width + this.size;
+                    if (this.x > width + this.size) this.x = -this.size;
+                }
+                
+                draw(ctx) {
+                    ctx.save();
+                    ctx.translate(this.x, this.y);
+                    ctx.rotate(this.rotation);
+                    ctx.globalAlpha = this.opacity;
+                    ctx.fillStyle = this.color;
+                    ctx.shadowColor = '#ff3366';
+                    ctx.shadowBlur = 10;
+                    const sz = this.size;
+                    ctx.beginPath();
+                    const topCurveHeight = sz * 0.3;
+                    ctx.moveTo(0, sz * 0.25);
+                    ctx.bezierCurveTo(0, -topCurveHeight, -sz/2, -topCurveHeight, -sz/2, sz*0.25);
+                    ctx.bezierCurveTo(-sz/2, sz*0.65, 0, sz*0.85, 0, sz);
+                    ctx.bezierCurveTo(0, sz*0.85, sz/2, sz*0.65, sz/2, sz*0.25);
+                    ctx.bezierCurveTo(sz/2, -topCurveHeight, 0, -topCurveHeight, 0, sz*0.25);
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+            
+            class FlyingBalloon {
+                constructor() {
+                    this.reset();
+                }
+                
+                reset() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height * 0.7 + height * 0.3;
+                    this.size = Math.random() * 20 + 14;
+                    this.speedY = Math.random() * 0.8 + 0.4;
+                    this.speedX = (Math.random() - 0.5) * 0.6;
+                    this.opacity = Math.random() * 0.5 + 0.35;
+                    const colors = ['#ff4d6d', '#ff6b8a', '#ff8da1', '#ff3b5c', '#ff5e7e', '#ffb3c6', '#ff1a4b', '#e84393', '#fd79a8', '#e91e63', '#ff7eb3', '#ff4081'];
+                    this.color = colors[Math.floor(Math.random() * colors.length)];
+                }
+                
+                update() {
+                    this.y -= this.speedY;
+                    this.x += this.speedX + Math.sin(this.y * 0.02) * 0.3;
+                    if (this.y < -this.size * 2.5) {
+                        this.y = height + this.size * 1.5;
+                        this.x = Math.random() * width;
+                    }
+                    if (this.x < -this.size) this.x = width + this.size;
+                    if (this.x > width + this.size) this.x = -this.size;
+                }
+                
+                draw(ctx) {
+                    ctx.save();
+                    ctx.translate(this.x, this.y);
+                    ctx.globalAlpha = this.opacity;
+                    ctx.beginPath();
+                    ctx.moveTo(0, this.size * 0.6);
+                    ctx.quadraticCurveTo(4, this.size * 0.85, -2, this.size * 0.95);
+                    ctx.strokeStyle = '#ffffff';
+                    ctx.lineWidth = 1.2;
+                    ctx.stroke();
+                    ctx.fillStyle = this.color;
+                    ctx.shadowColor = 'rgba(0,0,0,0.3)';
+                    ctx.shadowBlur = 6;
+                    ctx.beginPath();
+                    ctx.ellipse(0, -this.size * 0.1, this.size * 0.5, this.size * 0.65, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = 'rgba(255,255,255,0.25)';
+                    ctx.beginPath();
+                    ctx.ellipse(-this.size*0.12, -this.size*0.2, this.size*0.12, this.size*0.18, 0, 0, Math.PI*2);
+                    ctx.fill();
+                    ctx.fillStyle = this.color;
+                    ctx.shadowBlur = 0;
+                    ctx.beginPath();
+                    ctx.moveTo(-3, this.size * 0.55);
+                    ctx.lineTo(3, this.size * 0.55);
+                    ctx.lineTo(0, this.size * 0.68);
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+            
+            function initCanvas() {
+                if (canvasInitialized) return;
+                canvasInitialized = true;
+                
+                flyingObjects = [];
+                
+                for (let i = 1; i <= 12; i++) {
+                    if (loadedImages[i]) {
+                        flyingObjects.push(new FlyingPhoto(loadedImages[i], i));
+                    }
+                }
+                
+                const heartCount = Math.min(55, Math.floor(width / 18));
+                for (let i = 0; i < heartCount; i++) {
+                    flyingObjects.push(new FlyingHeart());
+                }
+                
+                const balloonCount = Math.min(12, Math.floor(width / 40));
+                for (let i = 0; i < balloonCount; i++) {
+                    flyingObjects.push(new FlyingBalloon());
+                }
+                
+                console.log(`✨ Animación: ${flyingObjects.filter(o => o instanceof FlyingPhoto).length} fotos | ${flyingObjects.filter(o => o instanceof FlyingHeart).length} corazones | ${flyingObjects.filter(o => o instanceof FlyingBalloon).length} globos`);
+                
+                animateCanvas();
+            }
+            
+            canvas.addEventListener('click', function(e) {
+                if (!canvasInitialized) return;
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+                const photos = flyingObjects.filter(o => o instanceof FlyingPhoto).reverse();
+                for (let photo of photos) {
+                    if (photo.isClicked(mouseX, mouseY)) {
+                        showPhotoOverlay(photo.photoNum);
+                        break;
+                    }
+                }
+            });
+            
+            function showPhotoOverlay(photoNum) {
+                const img = loadedImages[photoNum];
+                if (!img) return;
+                enlargedPhoto.src = img.src;
+                yearMessage.textContent = yearMessages[photoNum] || '💖 Recuerdo especial con Nely 💖';
+                photoOverlay.classList.add('active');
+            }
+            
+            function animateCanvas() {
+                if (!canvasInitialized) {
+                    requestAnimationFrame(animateCanvas);
+                    return;
+                }
+                ctx.clearRect(0, 0, width, height);
+                for (let obj of flyingObjects) {
+                    obj.update();
+                    obj.draw(ctx);
+                }
+                requestAnimationFrame(animateCanvas);
+            }
+            
+            animateCanvas();
+            
+            window.addEventListener('resize', () => {
+                if (canvasInitialized) {
+                    const photoObjects = flyingObjects.filter(o => o instanceof FlyingPhoto);
+                    flyingObjects = [...photoObjects];
+                    const newHeartCount = Math.min(55, Math.floor(width / 18));
+                    for (let i = 0; i < newHeartCount; i++) {
+                        flyingObjects.push(new FlyingHeart());
+                    }
+                    const newBalloonCount = Math.min(12, Math.floor(width / 40));
+                    for (let i = 0; i < newBalloonCount; i++) {
+                        flyingObjects.push(new FlyingBalloon());
+                    }
+                }
+            });
+            
+            canvas.style.cursor = 'pointer';
+            
+            // ========== LÓGICA DEL DÍA DEL ANIVERSARIO CON BOTÓN "ENTRAR" ==========
+            const countdownPage = document.getElementById('countdownPage');
+            const anniversaryPage = document.getElementById('anniversaryPage');
+            const enterOverlay = document.getElementById('enterOverlay');
+            const enterButton = document.getElementById('enterButton');
+            let anniversaryShown = false;
+            
+            // Al hacer clic en "ENTRAR", mostrar la página de aniversario
+            enterButton.addEventListener('click', function() {
+                enterOverlay.classList.remove('active');
+                countdownPage.style.display = 'none';
+                anniversaryPage.style.display = 'block';
+                anniversaryShown = true;
+                launchConfetti();
+                startAnniversaryCounter();
+                document.title = '💖 ¡Feliz Aniversario Nely! 💖';
+            });
+            
+            function checkDateAndSwitch() {
+                const now = new Date();
+                
+                if (now >= anniversaryDate && !anniversaryShown) {
+                    // Mostrar el overlay con el botón "ENTRAR"
+                    countdownPage.style.display = 'none';
+                    anniversaryPage.style.display = 'none';
+                    enterOverlay.classList.add('active');
+                    document.title = '💖 ¡Llegó el día! • Nely 💖';
+                } else if (now < anniversaryDate) {
+                    // Mostrar cuenta regresiva
+                    countdownPage.style.display = 'block';
+                    anniversaryPage.style.display = 'none';
+                    enterOverlay.classList.remove('active');
+                    updateCountdown();
+                }
+                // Si ya se mostró el aniversario, no hacer nada
+            }
+            
+            // ========== ACTUALIZAR CUENTA REGRESIVA ==========
+            function updateCountdown() {
+                const now = new Date();
+                const diffMs = anniversaryDate - now;
+                
+                if (diffMs <= 0) {
+                    checkDateAndSwitch();
+                    return;
+                }
+                
+                const diffSeconds = Math.floor(diffMs / 1000);
+                const days = Math.floor(diffSeconds / 86400);
+                const hours = Math.floor((diffSeconds % 86400) / 3600);
+                const minutes = Math.floor((diffSeconds % 3600) / 60);
+                const seconds = diffSeconds % 60;
+                
+                document.getElementById('countdownDays').textContent = days;
+                document.getElementById('countdownHours').textContent = hours;
+                document.getElementById('countdownMinutes').textContent = minutes;
+                document.getElementById('countdownSeconds').textContent = seconds;
+                
+                document.title = `Faltan ${days} días • Nely 💖`;
+            }
+            
+            // ========== CONTADOR DE TIEMPO JUNTOS ==========
+            function startAnniversaryCounter() {
+                const relationshipStart = new Date(2022, 4, 24);
+                
+                function update() {
+                    const now = new Date();
+                    const diffMs = now - relationshipStart;
+                    if (diffMs < 0) return;
+                    
+                    const diffSeconds = Math.floor(diffMs / 1000);
+                    const days = Math.floor(diffSeconds / 86400);
+                    const hours = Math.floor((diffSeconds % 86400) / 3600);
+                    const minutes = Math.floor((diffSeconds % 3600) / 60);
+                    const seconds = diffSeconds % 60;
+                    
+                    document.getElementById('daysCount').textContent = days;
+                    document.getElementById('hoursCount').textContent = hours;
+                    document.getElementById('minutesCount').textContent = minutes;
+                    document.getElementById('secondsCount').textContent = seconds;
+                }
+                
+                update();
+                setInterval(update, 1000);
+            }
+            
+            // ========== CONFETI ==========
+            function launchConfetti() {
+                const container = document.getElementById('confettiContainer');
+                const colors = ['#ff4d6d', '#ffb3c6', '#ff8da1', '#ff1a4b', '#ffb6c1', '#ffffff', '#ff99aa', '#ffd0d9', '#ff3864', '#ff6b8a'];
+                
+                function createConfetti() {
+                    for (let i = 0; i < 40; i++) {
+                        const confetti = document.createElement('div');
+                        confetti.className = 'confetti';
+                        confetti.style.left = Math.random() * 100 + '%';
+                        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                        confetti.style.animationDelay = Math.random() * 2 + 's';
+                        confetti.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                        confetti.style.width = (Math.random() * 10 + 6) + 'px';
+                        confetti.style.height = (Math.random() * 10 + 6) + 'px';
+                        confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                        container.appendChild(confetti);
+                        setTimeout(() => confetti.remove(), 6000);
+                    }
+                }
+                
+                createConfetti();
+                setInterval(createConfetti, 8000);
+            }
+            
+            // ========== VERIFICAR CADA SEGUNDO ==========
+            checkDateAndSwitch();
+            setInterval(checkDateAndSwitch, 1000);
+            
+            // ========== BOTÓN SORPRESA ==========
+            document.getElementById('surpriseBtn').addEventListener('click', function() {
+                alert('💖 Nely, cada latido de mi corazón pronuncia tu nombre. ¡Gracias por estos 4 años maravillosos! Te amo infinitamente. 💖');
+                const bigHeart = document.createElement('div');
+                bigHeart.textContent = '💘';
+                bigHeart.style.position = 'fixed';
+                bigHeart.style.top = '50%';
+                bigHeart.style.left = '50%';
+                bigHeart.style.transform = 'translate(-50%, -50%)';
+                bigHeart.style.fontSize = '8rem';
+                bigHeart.style.zIndex = '999';
+                bigHeart.style.pointerEvents = 'none';
+                bigHeart.style.animation = 'floatUp 2.4s ease-out forwards';
+                document.body.appendChild(bigHeart);
+                setTimeout(() => bigHeart.remove(), 2400);
+            });
+            
+            // ========== MÚSICA ROMÁNTICA ==========
+            document.getElementById('playMusicBtn').addEventListener('click', function() {
+                try {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    const audioCtx = new AudioContext();
+                    const now = audioCtx.currentTime;
+                    const melody = [
+                        { freq: 523.25, dur: 0.4 }, { freq: 587.33, dur: 0.4 },
+                        { freq: 659.25, dur: 0.5 }, { freq: 698.46, dur: 0.3 },
+                        { freq: 783.99, dur: 0.6 }, { freq: 880.00, dur: 0.5 },
+                        { freq: 783.99, dur: 0.4 }, { freq: 659.25, dur: 0.7 }
+                    ];
+                    let timeOffset = 0;
+                    melody.forEach(note => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.value = note.freq;
+                        gain.gain.setValueAtTime(0.18, now + timeOffset);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + timeOffset + note.dur - 0.05);
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.start(now + timeOffset);
+                        osc.stop(now + timeOffset + note.dur);
+                        timeOffset += note.dur;
+                    });
+                    const btn = document.getElementById('playMusicBtn');
+                    btn.textContent = '🎵 Melodía para Nely...';
+                    btn.style.background = '#ff3864';
+                    setTimeout(() => {
+                        btn.textContent = '🎵 Música romántica';
+                        btn.style.background = '';
+                    }, 4000);
+                } catch (e) {
+                    alert('🎶 Suena nuestra canción favorita en el corazón... 🎶');
+                }
+            });
+            
+            // ========== CLIC EN FOTOS DE LA GALERÍA ==========
+            document.querySelectorAll('.mini-photo img').forEach((img, index) => {
+                img.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const photoNum = index + 1;
+                    showPhotoOverlay(photoNum);
+                });
+            });
+            
+            // ========== CLIC EN FOTO PRINCIPAL ==========
+            const mainDisplay = document.getElementById('mainPhotoDisplay');
+            if (mainDisplay.querySelector('img')) {
+                mainDisplay.addEventListener('click', function() {
+                    const currentImg = mainDisplay.querySelector('img');
+                    if (currentImg && Object.keys(loadedImages).length > 0) {
+                        const keys = Object.keys(loadedImages);
+                        const randomKey = keys[Math.floor(Math.random() * keys.length)];
+                        currentImg.src = loadedImages[randomKey].src;
+                    }
+                });
+            }
+            
+            console.log('💖💖💖 Página lista para Nely 💖💖💖');
+            console.log('📸 12 fotos GRANDES voladoras + corazones + globos');
+            console.log('👆 Clic en fotos voladoras = mensaje del año');
+            console.log('🎁 Día del aniversario: Botón "ENTRAR" para descubrir la sorpresa');
+            console.log('📅 Aniversario: 24 de Mayo de 2026');
+        })();
+    </script>
+</body>
+</html>

@@ -3,624 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Cuenta Regresiva • Nely 💖</title>
+    <title>✨ Nely • El amor más bonito del universo ✨</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background: radial-gradient(ellipse at center, #4a1028 0%, #2a0618 60%, #14010c 100%);
+            background: radial-gradient(ellipse at center, #0a0a2a 0%, #1a0a1a 60%, #050105 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             font-family: 'Quicksand', sans-serif;
             padding: 1.2rem;
-            margin: 0;
             position: relative;
             overflow-x: hidden;
-            overflow-y: auto;
         }
-
-        /* Canvas para fotos, corazones y globos volando */
-        #heartsCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
+        /* Estrellas y luna */
+        .stars-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+        .star { position: absolute; background: white; border-radius: 50%; opacity: 0.6; animation: twinkle 3s infinite alternate; }
+        @keyframes twinkle { 0% { opacity: 0.2; transform: scale(1); } 100% { opacity: 1; transform: scale(1.3); } }
+        .moon {
+            position: absolute; top: 5%; right: 5%; width: 80px; height: 80px;
+            background: radial-gradient(circle at 30% 30%, #fff9c4, #ffe082);
+            border-radius: 50%; box-shadow: 0 0 40px #ffeb9e, 0 0 80px #ffd54f;
+            animation: moonGlow 6s infinite alternate; z-index: 2;
         }
-
-        /* Overlay para foto ampliada al hacer clic */
+        @keyframes moonGlow { 0% { box-shadow: 0 0 20px #ffeb9e; transform: scale(1); } 100% { box-shadow: 0 0 80px #ffd54f; transform: scale(1.05); } }
+        /* Canvas */
+        #heartsCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+        /* Overlay foto */
         .photo-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 100;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            cursor: pointer;
-            backdrop-filter: blur(5px);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92);
+            z-index: 100; display: none; justify-content: center; align-items: center; flex-direction: column;
+            cursor: pointer; backdrop-filter: blur(8px);
         }
-
-        .photo-overlay.active {
-            display: flex;
-        }
-
+        .photo-overlay.active { display: flex; }
         .photo-overlay .enlarged-photo {
-            max-width: 80vw;
-            max-height: 60vh;
-            border-radius: 2rem;
-            border: 5px solid #ffb6c1;
-            box-shadow: 0 0 60px #ff3864, 0 20px 40px rgba(0,0,0,0.8);
-            object-fit: contain;
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-width: 80vw; max-height: 60vh; border-radius: 2rem; border: 6px solid gold;
+            box-shadow: 0 0 100px #ff66aa; animation: popIn 0.6s;
         }
-
-        @keyframes popIn {
-            0% { transform: scale(0.3); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
+        @keyframes popIn { 0% { transform: scale(0.2) rotate(-10deg); opacity: 0; } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
         .photo-overlay .year-message {
-            font-family: 'Dancing Script', cursive;
-            font-size: 3.5rem;
-            color: #ffb6c1;
-            text-shadow: 0 0 30px #ff2d55, 0 0 60px #ff1744;
-            margin-top: 1.5rem;
-            text-align: center;
-            animation: fadeInUp 0.6s ease-out;
-            padding: 0 2rem;
+            font-family: 'Dancing Script', cursive; font-size: 3rem; color: #ffd966;
+            text-shadow: 0 0 40px #ff2d55; margin-top: 2rem; text-align: center; white-space: pre-line;
         }
-
-        @keyframes fadeInUp {
-            0% { transform: translateY(30px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
+        /* Overlay de confirmación de cita */
+        .confirm-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 250; display: none;
+            justify-content: center; align-items: center; backdrop-filter: blur(15px);
         }
-
-        .photo-overlay .close-hint {
-            color: rgba(255,255,255,0.6);
-            margin-top: 1rem;
-            font-size: 0.9rem;
+        .confirm-overlay.active { display: flex; }
+        .confirm-card {
+            background: linear-gradient(145deg, #fff0e0, #ffe6d5); color: #3a1a2a;
+            max-width: 550px; width: 85%; border-radius: 3rem; padding: 2rem;
+            text-align: center; box-shadow: 0 0 80px #ff66aa; border: 3px solid #ffb6c1;
+            animation: slideUp 0.6s ease;
         }
-
-        /* ========== OVERLAY DEL BOTÓN "ENTRAR" (DÍA DEL ANIVERSARIO) ========== */
+        .confirm-card h2 { font-family: 'Dancing Script', cursive; font-size: 2.8rem; color: #c23b5e; }
+        .confirm-card .cita-message {
+            font-size: 1.5rem; font-weight: bold; background: #ffecb3; padding: 1rem;
+            border-radius: 2rem; margin: 1.2rem 0; border-left: 8px solid #ff2d55; text-align: left;
+        }
+        .confirm-card button {
+            background: #c23b5e; color: white; border: none; padding: 0.8rem 2rem;
+            border-radius: 3rem; font-size: 1.3rem; font-weight: bold; cursor: pointer;
+            transition: 0.3s;
+        }
+        .confirm-card button:hover { background: #ff2d55; transform: scale(1.05); }
+        /* Overlay botón ENTRAR */
         .enter-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 200;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            backdrop-filter: blur(10px);
-        }
-
-        .enter-overlay.active {
-            display: flex;
-        }
-
-        .enter-message {
-            font-family: 'Dancing Script', cursive;
-            font-size: 4rem;
-            color: #ffb6c1;
-            text-shadow: 0 0 40px #ff2d55, 0 0 80px #ff1744, 0 0 120px #ff3366;
-            text-align: center;
-            margin-bottom: 2rem;
-            animation: glowPulse 2s infinite;
-            padding: 0 2rem;
-        }
-
-        @keyframes glowPulse {
-            0%, 100% { text-shadow: 0 0 40px #ff2d55, 0 0 80px #ff1744; }
-            50% { text-shadow: 0 0 80px #ff4d7a, 0 0 140px #ff3366, 0 0 200px #ff1a4b; }
-        }
-
-        .enter-button {
-            font-family: 'Quicksand', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 700;
-            padding: 1.5rem 4rem;
-            background: linear-gradient(135deg, #ff3864, #ff1a4b);
-            color: white;
-            border: 4px solid #ffb6c1;
-            border-radius: 4rem;
-            cursor: pointer;
-            box-shadow: 0 0 60px #ff3864, 0 0 120px #ff1744, 0 20px 40px rgba(0,0,0,0.6);
-            transition: all 0.3s ease;
-            animation: buttonGlow 2s infinite, bounceIn 1s ease-out;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-        }
-
-        @keyframes buttonGlow {
-            0%, 100% { box-shadow: 0 0 60px #ff3864, 0 0 120px #ff1744; }
-            50% { box-shadow: 0 0 100px #ff4d7a, 0 0 180px #ff3366, 0 0 250px #ff1a4b; }
-        }
-
-        @keyframes bounceIn {
-            0% { transform: scale(0); opacity: 0; }
-            60% { transform: scale(1.1); opacity: 1; }
-            80% { transform: scale(0.95); }
-            100% { transform: scale(1); }
-        }
-
-        .enter-button:hover {
-            transform: scale(1.1);
-            background: linear-gradient(135deg, #ff4d7a, #ff2d55);
-            border-color: white;
-            box-shadow: 0 0 120px #ff4d7a, 0 0 200px #ff3864;
-        }
-
-        .enter-button:active {
-            transform: scale(0.95);
-        }
-
-        .enter-hearts {
-            font-size: 4rem;
-            animation: floatHearts 2s infinite;
-            margin-bottom: 1rem;
-        }
-
-        @keyframes floatHearts {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-20px) scale(1.1); }
-        }
-
-        /* Contenedor para imágenes precargadas (oculto) */
-        #imageLoader {
-            position: absolute;
-            width: 0;
-            height: 0;
-            overflow: hidden;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        /* ========== PÁGINA 1: CUENTA REGRESIVA ========== */
-        .countdown-page {
-            position: relative;
-            z-index: 20;
-            max-width: 650px;
-            width: 100%;
-            background: rgba(25, 4, 12, 0.5);
-            backdrop-filter: blur(22px);
-            -webkit-backdrop-filter: blur(22px);
-            background: linear-gradient(160deg, rgba(255, 200, 215, 0.2) 0%, rgba(180, 100, 125, 0.12) 100%);
-            border-radius: 4rem;
-            box-shadow: 0 35px 60px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(255, 130, 160, 0.55), inset 0 0 30px rgba(255, 80, 120, 0.25);
-            padding: 3rem 2rem;
-            text-align: center;
-            color: #fff0f5;
-            border: 1.5px solid rgba(255, 150, 175, 0.5);
-            animation: cardGlow 4s infinite alternate;
-            display: block;
-        }
-
-        /* ========== PÁGINA 2: ANIVERSARIO (oculta hasta hacer clic en "Entrar") ========== */
-        .anniversary-page {
-            position: relative;
-            z-index: 20;
-            max-width: 720px;
-            width: 100%;
-            background: rgba(25, 4, 12, 0.5);
-            backdrop-filter: blur(22px);
-            -webkit-backdrop-filter: blur(22px);
-            background: linear-gradient(160deg, rgba(255, 200, 215, 0.2) 0%, rgba(180, 100, 125, 0.12) 100%);
-            border-radius: 4rem 4rem 3.5rem 3.5rem;
-            box-shadow: 0 35px 60px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(255, 130, 160, 0.55), inset 0 0 30px rgba(255, 80, 120, 0.25);
-            padding: 2.5rem 2rem 2.8rem;
-            text-align: center;
-            color: #fff0f5;
-            border: 1.5px solid rgba(255, 150, 175, 0.5);
-            animation: cardGlow 4s infinite alternate;
-            display: none;
-        }
-
-        @keyframes cardGlow {
-            0% { box-shadow: 0 35px 60px rgba(0,0,0,0.7), 0 0 0 2px rgba(255,130,160,0.5), 0 0 30px #ff3366; }
-            100% { box-shadow: 0 35px 60px rgba(0,0,0,0.7), 0 0 0 2px rgba(255,130,160,0.8), 0 0 50px #ff4d7a; }
-        }
-
-        /* Estilos cuenta regresiva */
-        .countdown-title {
-            font-family: 'Dancing Script', cursive;
-            font-size: 3.2rem;
-            font-weight: 700;
-            color: #fff0f5;
-            text-shadow: 0 0 25px #ff2d55, 0 6px 18px #8b1e3a;
-            margin-bottom: 0.5rem;
-            letter-spacing: 3px;
-        }
-
-        .countdown-subtitle {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2rem;
-            font-weight: 600;
-            color: #ffd0d9;
-            margin-bottom: 1.5rem;
-            text-shadow: 0 0 18px #d6336c;
-        }
-
-        .countdown-box {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-            margin: 2rem 0;
-        }
-
-        .countdown-item {
-            background: rgba(20, 3, 12, 0.6);
-            backdrop-filter: blur(10px);
-            border-radius: 2rem;
-            padding: 1.5rem 1rem;
-            min-width: 85px;
-            border: 1px solid #ff8da1;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-            transition: transform 0.3s;
-        }
-
-        .countdown-item:hover {
-            transform: translateY(-5px);
-        }
-
-        .countdown-number {
-            font-size: 3.5rem;
-            font-weight: 700;
-            color: #ffb7c5;
-            text-shadow: 0 0 25px #ff2150;
-            line-height: 1.2;
-            font-family: 'Quicksand', sans-serif;
-        }
-
-        .countdown-label {
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: #f5ced7;
-            margin-top: 0.3rem;
-        }
-
-        .target-date {
-            font-size: 1.3rem;
-            color: #ffccd5;
-            margin: 1.5rem 0;
-            font-weight: 500;
-            background: rgba(0,0,0,0.3);
-            padding: 0.8rem 1.5rem;
-            border-radius: 2rem;
-            display: inline-block;
-        }
-
-        .heart-beat {
-            font-size: 3rem;
-            animation: heartBeat 1.2s infinite;
-            display: inline-block;
-        }
-
-        @keyframes heartBeat {
-            0%, 100% { transform: scale(1); }
-            15% { transform: scale(1.3); }
-            30% { transform: scale(1); }
-            45% { transform: scale(1.2); }
-            60% { transform: scale(1); }
-        }
-
-        .message-love {
-            font-size: 1.2rem;
-            line-height: 1.8;
-            color: #ffeef2;
-            background: rgba(15, 2, 8, 0.5);
-            padding: 1.2rem 1.4rem;
-            border-radius: 2rem;
-            margin: 1.5rem 0;
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 140, 160, 0.4);
-            font-style: italic;
-        }
-
-        /* Estilos página aniversario */
-        .photo-frame {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 0.8rem;
-        }
-
-        .couple-img {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 5px solid #ffb6c1;
-            box-shadow: 0 0 45px #ff3864, 0 12px 30px rgba(0,0,0,0.7);
-            background: linear-gradient(135deg, #c94b62, #771f35);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4.2rem;
-            color: white;
-            text-shadow: 0 2px 15px black;
-            margin: 0 auto;
-            transition: all 0.4s ease;
-            cursor: pointer;
-            animation: softPulse 2.8s infinite;
-            overflow: hidden;
-        }
-
-        .couple-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-
-        @keyframes softPulse {
-            0% { transform: scale(1); border-color: #ffb6c1; }
-            50% { transform: scale(1.04); border-color: #ff8da1; box-shadow: 0 0 55px #ff1a4b; }
-            100% { transform: scale(1); border-color: #ffb6c1; }
-        }
-
-        .names-title {
-            font-family: 'Dancing Script', cursive;
-            font-size: 4.4rem;
-            font-weight: 700;
-            color: #fff0f5;
-            text-shadow: 0 0 25px #ff2d55, 0 6px 18px #8b1e3a;
-            margin: 0.5rem 0 0.2rem;
-            letter-spacing: 4px;
-            line-height: 1.1;
-        }
-
-        .subtitle {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2.5rem;
-            font-weight: 600;
-            color: #ffd0d9;
-            margin-bottom: 0.7rem;
-            text-shadow: 0 0 18px #d6336c;
-        }
-
-        .heart-divider {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.8rem;
-            margin: 1.3rem 0 1rem;
-            font-size: 2.2rem;
-            filter: drop-shadow(0 0 14px #ff2952);
-        }
-
-        .message {
-            font-size: 1.2rem;
-            line-height: 1.8;
-            font-weight: 400;
-            color: #ffeef2;
-            background: rgba(15, 2, 8, 0.5);
-            padding: 1.6rem 1.4rem;
-            border-radius: 2.8rem;
-            margin: 1.4rem 0 1.8rem;
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 140, 160, 0.55);
-            font-style: italic;
-            letter-spacing: 0.3px;
-        }
-
-        .gallery {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1.2rem;
-            justify-content: center;
-            margin: 1.6rem 0 1.3rem;
-        }
-
-        .mini-photo {
-            width: 85px;
-            height: 85px;
-            border-radius: 2rem;
-            background: linear-gradient(135deg, #e36b7e, #9e2d47);
-            box-shadow: 0 10px 22px rgba(0,0,0,0.5), 0 0 25px #ff4d6d;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.4rem;
-            color: white;
-            border: 2px solid #ffc1cc;
-            transition: all 0.3s;
-            animation: floatMini 4s infinite ease-in-out;
-            overflow: hidden;
-            cursor: pointer;
-        }
-        .mini-photo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 2rem;
-        }
-        .mini-photo:nth-child(2) { animation-delay: 0.4s; }
-        .mini-photo:nth-child(3) { animation-delay: 0.8s; }
-        .mini-photo:nth-child(4) { animation-delay: 1.2s; }
-
-        @keyframes floatMini {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-
-        .mini-photo:hover {
-            transform: translateY(-7px) scale(1.08);
-            border-color: white;
-        }
-
-        .counter-section {
-            background: rgba(20, 3, 12, 0.6);
-            backdrop-filter: blur(10px);
-            border-radius: 2.8rem;
-            padding: 1.3rem 1rem;
-            margin: 1.5rem 0 2rem;
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-            border: 1px solid #ff8da1;
-        }
-
-        .time-box {
-            text-align: center;
-            min-width: 70px;
-        }
-
-        .time-number {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #ffb7c5;
-            text-shadow: 0 0 22px #ff2150;
-            line-height: 1.2;
-        }
-
-        .time-label {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #f5ced7;
-        }
-
-        .love-note {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2.3rem;
-            margin: 1.6rem 0 0.6rem;
-            color: #ffb6c1;
-            text-shadow: 0 0 30px #ff084a;
-        }
-
-        button {
-            background: rgba(180, 50, 75, 0.5);
-            border: 2px solid #ff99b4;
-            color: white;
-            padding: 0.8rem 2.3rem;
-            border-radius: 3rem;
-            font-size: 1.05rem;
-            font-weight: 600;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, #2a0a1a, #0a020a); z-index: 200;
+            display: none; justify-content: center; align-items: center; flex-direction: column;
             backdrop-filter: blur(12px);
-            cursor: pointer;
-            transition: all 0.3s;
-            margin: 0.6rem 0.4rem;
-            letter-spacing: 1px;
-            background: rgba(140, 30, 55, 0.65);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
-
-        button:hover {
-            background: #ff3864;
-            border-color: white;
-            box-shadow: 0 0 35px #ff1744;
-            transform: scale(1.05);
-            color: #fff;
+        .enter-overlay.active { display: flex; }
+        .enter-message {
+            font-family: 'Dancing Script', cursive; font-size: 4.5rem; color: #ffcce0;
+            text-shadow: 0 0 60px #ff2d55; text-align: center; margin-bottom: 2rem;
+            animation: glowPulse 2s infinite;
         }
-
-        .footer-hearts {
-            margin-top: 1.5rem;
-            font-size: 1.8rem;
-            letter-spacing: 7px;
-            color: #ff99aa;
+        @keyframes glowPulse { 0%,100% { text-shadow: 0 0 40px #ff2d55; } 50% { text-shadow: 0 0 100px #ff4d7a; } }
+        .enter-button {
+            font-family: 'Quicksand', sans-serif; font-size: 2.6rem; font-weight: 800;
+            padding: 1.5rem 4rem; background: linear-gradient(135deg, #ff2d55, #b0003a);
+            color: white; border: 3px solid #ffb6c1; border-radius: 5rem; cursor: pointer;
+            box-shadow: 0 0 80px #ff3864; transition: all 0.4s; animation: bounceIn 0.8s;
         }
-
-        .upload-hint {
-            font-size: 0.75rem;
-            color: #ffccd5;
-            margin-top: 0.3rem;
-            opacity: 0.8;
+        .enter-button:hover { transform: scale(1.08); background: linear-gradient(135deg, #ff6b8a, #e6003a); }
+        /* Notificación bloqueante genérica */
+        .generic-notification {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 350px; background: linear-gradient(145deg, #ff4d6d, #c9184a);
+            border-radius: 70px; box-shadow: 0 0 80px #ff1a4b; z-index: 1001;
+            display: flex; align-items: center; justify-content: center; text-align: center;
+            padding: 2rem; flex-direction: column; border: 3px solid #ffb6c1;
+            animation: heartbeatNotice 0.6s ease-out; color: white;
+            font-family: 'Quicksand', sans-serif;
         }
-
-        /* Confeti para el día del aniversario */
-        .confetti-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 15;
+        .generic-notification .icon { font-size: 5rem; animation: pulseHeart 1s infinite; margin-bottom: 1rem; }
+        .generic-notification .message { font-size: 1.6rem; font-weight: bold; font-family: 'Dancing Script', cursive; margin-bottom: 1rem; }
+        .generic-notification .timer { font-size: 1rem; background: rgba(0,0,0,0.3); padding: 0.4rem 1rem; border-radius: 2rem; display: inline-block; }
+        @keyframes heartbeatNotice { 0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; } 70% { transform: translate(-50%, -50%) scale(1.1); } 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
+        @keyframes pulseHeart { 0%,100% { transform: scale(1); } 50% { transform: scale(1.2); text-shadow: 0 0 20px #fff; } }
+        .notification-blocker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 1000; cursor: wait; }
+        /* Carta de amor */
+        .love-letter-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9);
+            z-index: 300; display: none; justify-content: center; align-items: center; backdrop-filter: blur(8px);
         }
-
-        .confetti {
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            animation: confettiFall 4s ease-in forwards;
+        .love-letter-overlay.active { display: flex; }
+        .letter-card {
+            background: #fff8f0; color: #2c0a1a; max-width: 500px; width: 85%;
+            border-radius: 2rem; padding: 2rem; box-shadow: 0 0 80px #ff99bb;
+            border: 2px solid #ffb6c1; animation: slideUp 0.5s ease;
         }
-
-        @keyframes confettiFall {
-            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+        .letter-card h2 { font-family: 'Dancing Script', cursive; font-size: 2.8rem; color: #c23b5e; text-align: center; }
+        .letter-card p { font-size: 1.2rem; line-height: 1.6; margin: 1rem 0; text-align: justify; }
+        .letter-card button { background: #c23b5e; color: white; border: none; padding: 0.7rem 1.8rem; border-radius: 2rem; font-size: 1rem; cursor: pointer; display: block; margin: 1.5rem auto 0; }
+        /* Mensajes flotantes */
+        .floating-messages { position: fixed; bottom: 10%; left: 0; width: 100%; pointer-events: none; z-index: 25; }
+        .float-msg {
+            position: absolute; font-size: 1.5rem; font-weight: bold; font-family: 'Dancing Script', cursive;
+            color: #ffb7c5; text-shadow: 0 0 15px #ff2d55; white-space: nowrap;
+            animation: floatUpMsg 6s ease-out forwards;
         }
-
+        @keyframes floatUpMsg { 0% { transform: translateY(0) scale(0.8); opacity: 1; } 100% { transform: translateY(-200px) scale(1.5); opacity: 0; } }
+        .romantic-quote {
+            position: fixed; bottom: 15px; left: 0; right: 0; text-align: center;
+            font-family: 'Dancing Script', cursive; font-size: 1.2rem; background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px); padding: 0.6rem; border-radius: 2rem; width: 90%; margin: 0 auto;
+            color: #ffdfe5; z-index: 10; pointer-events: none; transition: opacity 0.5s;
+        }
+        /* Páginas principales */
+        .countdown-page, .anniversary-page {
+            position: relative; z-index: 20; max-width: 700px; width: 100%;
+            background: rgba(25,4,12,0.6); backdrop-filter: blur(25px); border-radius: 4rem;
+            box-shadow: 0 0 30px #ff3366, 0 0 0 2px rgba(255,180,200,0.7);
+            padding: 2.5rem 1.8rem; text-align: center; color: #fff0f5;
+        }
+        .countdown-page { display: block; }
+        .anniversary-page { display: none; }
+        .countdown-title, .names-title {
+            font-family: 'Dancing Script', cursive; font-size: 3.5rem;
+            background: linear-gradient(135deg, #ffddee, #ffa5c0);
+            background-clip: text; -webkit-background-clip: text; color: transparent;
+            text-shadow: 0 0 30px #ff2d55;
+        }
+        .music-control-btn { background: rgba(0,0,0,0.6); border: 1px solid #ffb6c1; border-radius: 3rem; padding: 0.5rem 1.2rem; font-size: 0.9rem; margin: 0.5rem; cursor: pointer; }
+        .music-control-btn:hover { background: #ff3864; }
+        .countdown-box { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin: 2rem 0; }
+        .countdown-item { background: rgba(20,3,12,0.6); backdrop-filter: blur(10px); border-radius: 2rem; padding: 1.5rem 1rem; min-width: 85px; border: 1px solid #ff8da1; }
+        .countdown-number { font-size: 3.5rem; font-weight: 700; color: #ffb7c5; text-shadow: 0 0 25px #ff2150; }
+        .target-date { font-size: 1.3rem; color: #ffccd5; margin: 1.5rem 0; background: rgba(0,0,0,0.3); padding: 0.8rem 1.5rem; border-radius: 2rem; display: inline-block; }
+        .heart-beat { font-size: 3rem; animation: heartBeat 1.2s infinite; display: inline-block; }
+        @keyframes heartBeat { 0%,100%{transform:scale(1)} 15%{transform:scale(1.3)} 30%{transform:scale(1)} 45%{transform:scale(1.2)} 60%{transform:scale(1)} }
+        .message-love, .message { font-size: 1.2rem; line-height: 1.8; background: rgba(15,2,8,0.5); padding: 1.2rem; border-radius: 2rem; margin: 1.5rem 0; backdrop-filter: blur(8px); }
+        .photo-frame { display: flex; justify-content: center; margin-bottom: 0.8rem; }
+        .couple-img { width: 140px; height: 140px; border-radius: 50%; border: 5px solid #ffb6c1; box-shadow: 0 0 45px #ff3864; overflow: hidden; cursor: pointer; animation: softPulse 2.8s infinite; }
+        .couple-img img { width: 100%; height: 100%; object-fit: cover; }
+        @keyframes softPulse { 0% { transform: scale(1); border-color: #ffb6c1; } 50% { transform: scale(1.04); border-color: #ff8da1; } 100% { transform: scale(1); border-color: #ffb6c1; } }
+        .gallery { display: flex; flex-wrap: wrap; gap: 1.2rem; justify-content: center; margin: 1.6rem 0; }
+        .mini-photo { width: 85px; height: 85px; border-radius: 2rem; background: linear-gradient(135deg, #e36b7e, #9e2d47); border: 2px solid #ffc1cc; overflow: hidden; cursor: pointer; animation: floatMini 4s infinite; }
+        .mini-photo img { width: 100%; height: 100%; object-fit: cover; }
+        @keyframes floatMini { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+        .counter-section { background: rgba(20,3,12,0.6); backdrop-filter: blur(10px); border-radius: 2.8rem; padding: 1rem; margin: 1.5rem 0; display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; }
+        .time-number { font-size: 2.2rem; font-weight: 700; color: #ffb7c5; text-shadow: 0 0 22px #ff2150; }
+        .love-note { font-family: 'Dancing Script', cursive; font-size: 2.3rem; margin: 1.6rem 0 0.6rem; color: #ffb6c1; }
+        button { background: rgba(140,30,55,0.65); border: 2px solid #ff99b4; color: white; padding: 0.8rem 2rem; border-radius: 3rem; font-size: 1rem; font-weight: 600; backdrop-filter: blur(12px); cursor: pointer; transition: all 0.3s; margin: 0.5rem; }
+        button:hover { background: #ff3864; transform: scale(1.05); }
+        .footer-hearts { margin-top: 1.5rem; font-size: 1.8rem; letter-spacing: 7px; }
+        .confetti-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 15; }
+        .confetti { position: absolute; width: 12px; height: 12px; animation: confettiFall 4s ease-in forwards; }
+        @keyframes confettiFall { 0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
+        @keyframes floatUpHeart { 0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; } 100% { transform: translate(-50%, -150%) scale(1.5); opacity: 0; } }
         @media (max-width: 500px) {
-            .names-title {
-                font-size: 3.2rem;
-            }
-            .countdown-title {
-                font-size: 2.5rem;
-            }
-            .countdown-number {
-                font-size: 2.5rem;
-            }
-            .anniversary-page, .countdown-page {
-                padding: 2rem 1.2rem;
-            }
-            .photo-overlay .year-message {
-                font-size: 2.5rem;
-            }
-            .photo-overlay .enlarged-photo {
-                max-width: 90vw;
-                max-height: 50vh;
-            }
-            .enter-message {
-                font-size: 2.5rem;
-            }
-            .enter-button {
-                font-size: 1.8rem;
-                padding: 1rem 2.5rem;
-            }
+            .enter-message { font-size: 2.8rem; }
+            .enter-button { font-size: 1.6rem; padding: 1rem 2rem; }
+            .generic-notification { width: 280px; }
         }
     </style>
 </head>
 <body>
-    <!-- Canvas para fotos, corazones y globos volando -->
+    <div class="stars-bg" id="starsBg"></div>
+    <div class="moon"></div>
     <canvas id="heartsCanvas"></canvas>
+    <div class="floating-messages" id="floatingMessages"></div>
+    <div class="romantic-quote" id="romanticQuote">✨ "Contigo, cada segundo es eterno" ✨</div>
 
-    <!-- Overlay para foto ampliada con mensaje del año -->
+    <!-- Overlay foto ampliada -->
     <div class="photo-overlay" id="photoOverlay">
         <img class="enlarged-photo" id="enlargedPhoto" src="" alt="Recuerdo">
         <div class="year-message" id="yearMessage"></div>
         <div class="close-hint">💖 Toca para cerrar 💖</div>
     </div>
 
-    <!-- ========== OVERLAY DEL BOTÓN "ENTRAR" (DÍA DEL ANIVERSARIO) ========== -->
+    <!-- Overlay de confirmación de cita -->
+    <div class="confirm-overlay" id="confirmOverlay">
+        <div class="confirm-card">
+            <h2>📌 Cita importante</h2>
+            <div class="cita-message">
+                📅 TE VEO EL DIA DOMINGO 24/05/2026 A LAS 11:00 HORAS (del dia) EN EL CRUCE BOLOGNESI.
+            </div>
+            <p>Por favor, confirma que has leído y aceptas esta cita.</p>
+            <button id="acceptConfirmBtn">✅ ACEPTAR – Confirmar cita</button>
+        </div>
+    </div>
+
+    <!-- Overlay del botón ENTRAR -->
     <div class="enter-overlay" id="enterOverlay">
-        <div class="enter-hearts">💖💕💗</div>
+        <div class="enter-hearts" style="font-size:4rem; animation:floatHearts 2s infinite;">💖💕💗✨💖</div>
         <div class="enter-message">¡Llegó el día, Nely!<br>4 años de amor</div>
         <button class="enter-button" id="enterButton">✨ ENTRAR ✨</button>
     </div>
 
-    <!-- Cargador oculto de imágenes -->
-    <div id="imageLoader">
+    <!-- Carta de amor modal -->
+    <div class="love-letter-overlay" id="loveLetterOverlay">
+        <div class="letter-card">
+            <h2>Para mi Nely ❤️</h2>
+            <p>Desde que llegaste a mi vida, el universo se vistió de colores que no sabía que existían. Eres mi inspiración, mi paz, mi risa más sincera y mi sueño hecho realidad.</p>
+            <p>Cada latido me recuerda que lo más hermoso que me ha pasado eres tú. Gracias por estos 4 años de magia, de complicidad, de abrazos que curan y de miradas que lo dicen todo.</p>
+            <p><strong>Te amo más de lo que las palabras pueden expresar. Eres mi hogar. 💖</strong></p>
+            <button id="closeLetterBtn">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Imágenes precargadas (1.jpg a 12.jpg) -->
+    <div id="imageLoader" style="display:none;">
         <img src="1.jpg" id="img1" onload="imageLoaded(1)" onerror="this.style.display='none'">
         <img src="2.jpg" id="img2" onload="imageLoaded(2)" onerror="this.style.display='none'">
         <img src="3.jpg" id="img3" onload="imageLoaded(3)" onerror="this.style.display='none'">
@@ -635,115 +247,93 @@
         <img src="12.jpg" id="img12" onload="imageLoaded(12)" onerror="this.style.display='none'">
     </div>
 
-    <!-- Confeti (solo visible el día del aniversario) -->
     <div class="confetti-container" id="confettiContainer"></div>
 
-    <!-- ==================== PÁGINA 1: CUENTA REGRESIVA ==================== -->
+    <!-- Página cuenta regresiva -->
     <div class="countdown-page" id="countdownPage">
         <div class="heart-beat">💖</div>
         <h1 class="countdown-title">Nely, mi amor</h1>
-        <div class="countdown-subtitle">Nuestro aniversario se acerca...</div>
-        
+        <div class="countdown-subtitle" style="font-family:'Dancing Script'; font-size:2rem;">Nuestro aniversario se acerca...</div>
         <div class="countdown-box">
-            <div class="countdown-item">
-                <div class="countdown-number" id="countdownDays">24</div>
-                <div class="countdown-label">Días</div>
-            </div>
-            <div class="countdown-item">
-                <div class="countdown-number" id="countdownHours">0</div>
-                <div class="countdown-label">Horas</div>
-            </div>
-            <div class="countdown-item">
-                <div class="countdown-number" id="countdownMinutes">0</div>
-                <div class="countdown-label">Minutos</div>
-            </div>
-            <div class="countdown-item">
-                <div class="countdown-number" id="countdownSeconds">0</div>
-                <div class="countdown-label">Segundos</div>
-            </div>
+            <div class="countdown-item"><div class="countdown-number" id="countdownDays">0</div><div class="countdown-label">Días</div></div>
+            <div class="countdown-item"><div class="countdown-number" id="countdownHours">0</div><div class="countdown-label">Horas</div></div>
+            <div class="countdown-item"><div class="countdown-number" id="countdownMinutes">0</div><div class="countdown-label">Minutos</div></div>
+            <div class="countdown-item"><div class="countdown-number" id="countdownSeconds">0</div><div class="countdown-label">Segundos</div></div>
         </div>
-
-        <div class="target-date">
-            📅 <strong>24 de Mayo de 2026</strong> 📅
-        </div>
-
-        <div class="message-love">
-            Cada segundo que pasa es un latido más cerca de ti.<br>
-            Pronto celebraremos <strong>4 años</strong> del amor más hermoso.<br>
-            ¡Te amo Nely! 💕
-        </div>
-
-        <div class="footer-hearts">
-            ❤️ 💕 💗 💖 💘 💝
-        </div>
+        <div class="target-date">📅 <strong>24 de Mayo de 2026 - 00:00 (Medianoche)</strong> 📅</div>
+        <div class="message-love">Cada segundo que pasa es un latido más cerca de ti.<br>Pronto celebraremos <strong>4 años</strong> del amor más hermoso.<br>¡Te amo Nely! 💕</div>
+        <div class="footer-hearts">❤️ 💕 💗 💖 💘 💝</div>
     </div>
 
-    <!-- ==================== PÁGINA 2: ANIVERSARIO (oculta hasta hacer clic en "Entrar") ==================== -->
+    <!-- Página aniversario -->
     <div class="anniversary-page" id="anniversaryPage">
-        <div class="photo-frame">
-            <div class="couple-img" id="mainPhotoDisplay">
-                <img src="1.jpg" alt="Nely y yo" onerror="this.innerHTML='💖<span style=font-size:2rem;margin-left:6px;>Nely</span>'">
-            </div>
-        </div>
+        <div class="photo-frame"><div class="couple-img" id="mainPhotoDisplay"><img src="1.jpg" alt="Nely y yo"></div></div>
         <div class="upload-hint">💡 Tu foto principal - ¡Preciosa!</div>
-
         <h1 class="names-title">Nely & Yo</h1>
         <div class="subtitle">¡4 años de amor eterno!</div>
-
-        <div class="heart-divider">
-            <span>❤️</span><span>✨</span><span>❤️</span><span>✨</span><span>❤️</span>
-        </div>
-
-        <div class="message">
-            Mi querida Nely,<br>
-            Hoy celebramos cuatro maravillosos años desde que unimos nuestras almas. Cada día a tu lado es un regalo lleno de risas, complicidad y un amor que crece sin medida. Eres mi inspiración, mi paz y mi más bello sueño hecho realidad.<br>
-            <strong>¡Feliz aniversario, mi amor! 💘</strong>
-        </div>
-
+        <div class="heart-divider"><span>❤️</span><span>✨</span><span>❤️</span><span>✨</span><span>❤️</span></div>
+        <div class="message">Mi querida Nely,<br>Hoy celebramos cuatro maravillosos años desde que unimos nuestras almas. Cada día a tu lado es un regalo lleno de risas, complicidad y un amor que crece sin medida. Eres mi inspiración, mi paz y mi más bello sueño hecho realidad.<br><strong>¡Feliz aniversario, mi amor! 💘</strong></div>
         <div class="gallery">
-            <div class="mini-photo"><img src="1.jpg" alt="Año 1" onerror="this.innerHTML='📸💗'"></div>
-            <div class="mini-photo"><img src="2.jpg" alt="Año 2" onerror="this.innerHTML='🌹✨'"></div>
-            <div class="mini-photo"><img src="3.jpg" alt="Año 3" onerror="this.innerHTML='💌😊'"></div>
-            <div class="mini-photo"><img src="4.jpg" alt="Año 4" onerror="this.innerHTML='🎵💖'"></div>
+            <div class="mini-photo"><img src="1.jpg" alt="Año 1"></div>
+            <div class="mini-photo"><img src="2.jpg" alt="Año 2"></div>
+            <div class="mini-photo"><img src="3.jpg" alt="Año 3"></div>
+            <div class="mini-photo"><img src="4.jpg" alt="Año 4"></div>
         </div>
         <div class="upload-hint">💡 Galería de nuestros momentos especiales</div>
-
         <div class="counter-section" id="anniversaryCounter">
-            <div class="time-box">
-                <div class="time-number" id="daysCount">0</div>
-                <div class="time-label">Días</div>
-            </div>
-            <div class="time-box">
-                <div class="time-number" id="hoursCount">0</div>
-                <div class="time-label">Horas</div>
-            </div>
-            <div class="time-box">
-                <div class="time-number" id="minutesCount">0</div>
-                <div class="time-label">Minutos</div>
-            </div>
-            <div class="time-box">
-                <div class="time-number" id="secondsCount">0</div>
-                <div class="time-label">Segundos</div>
-            </div>
+            <div class="time-box"><div class="time-number" id="daysCount">0</div><div class="time-label">Días</div></div>
+            <div class="time-box"><div class="time-number" id="hoursCount">0</div><div class="time-label">Horas</div></div>
+            <div class="time-box"><div class="time-number" id="minutesCount">0</div><div class="time-label">Minutos</div></div>
+            <div class="time-box"><div class="time-number" id="secondsCount">0</div><div class="time-label">Segundos</div></div>
         </div>
-
         <div class="love-note">✨ Nely, mi eterna compañera ✨</div>
-
         <button id="surpriseBtn">💖 Toca para una sorpresa</button>
         <button id="playMusicBtn">🎵 Música romántica</button>
-        
-        <div class="footer-hearts">
-            ❤️ 💕 💗 💖 💘 💝
-        </div>
-        <div style="margin-top:0.5rem; color:#ffb3c6; font-size:1rem;">#4AñosJuntos #NelyEresMiVida</div>
+        <div class="footer-hearts">❤️ 💕 💗 💖 💘 💝</div>
+        <div style="margin-top:0.5rem; color:#ffb3c6;">#4AñosJuntos #NelyEresMiVida</div>
     </div>
 
     <script>
         (function() {
-            // ========== FECHA OBJETIVO: 24 DE MAYO DE 2026 ==========
+            // Polyfill roundRect
+            if (!CanvasRenderingContext2D.prototype.roundRect) {
+                CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+                    if (w < 2 * r) r = w / 2;
+                    if (h < 2 * r) r = h / 2;
+                    this.moveTo(x + r, y);
+                    this.lineTo(x + w - r, y);
+                    this.quadraticCurveTo(x + w, y, x + w, y + r);
+                    this.lineTo(x + w, y + h - r);
+                    this.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+                    this.lineTo(x + r, y + h);
+                    this.quadraticCurveTo(x, y + h, x, y + h - r);
+                    this.lineTo(x, y + r);
+                    this.quadraticCurveTo(x, y, x + r, y);
+                    this.closePath();
+                    return this;
+                };
+            }
+
+            // Música MP3
+            let bgMusic = null;
+            let musicStarted = false;
+            function startBackgroundMusic() {
+                if (musicStarted) return;
+                if (!bgMusic) {
+                    bgMusic = new Audio('music.mp3');
+                    bgMusic.loop = true;
+                    bgMusic.volume = 0.4;
+                }
+                bgMusic.play().catch(e => console.log("Música automática necesita interacción."));
+                musicStarted = true;
+                const toggleBtn = document.getElementById('toggleBgMusicBtn');
+                if (toggleBtn) toggleBtn.innerHTML = '🔇 Silenciar música';
+            }
+
+            // FECHA ANIVERSARIO: 24 DE MAYO 2026 A LAS 00:00 (MEDIANOCHE)
             const anniversaryDate = new Date(2026, 4, 24, 0, 0, 0);
             
-            // ========== MENSAJES POR AÑO ==========
+            // Mensajes para fotos
             const yearMessages = {
                 1: "💖 Año 1 • Donde todo comenzó\nNuestro primer año juntos, el inicio de nuestra historia de amor. ¡Gracias por decir que sí, Nely! 🌹",
                 2: "💕 Año 2 • Nuestro amor creció\nSegundo año de amor verdadero. Cada día a tu lado fue un regalo maravilloso. ✨",
@@ -759,73 +349,42 @@
                 12: "👑 Momento mágico • Año 4\nReinando juntos en nuestro mundo. ¡Feliz aniversario Nely! 💘"
             };
             
-            // ========== CARGAR LAS 12 IMÁGENES ==========
+            // Carga de imágenes
             const loadedImages = {};
             let imagesLoadedCount = 0;
             const totalImages = 12;
-            
             window.imageLoaded = function(num) {
-                const img = document.getElementById('img' + num);
-                if (img && img.complete && !loadedImages[num] && img.naturalWidth > 0) {
+                const img = document.getElementById('img'+num);
+                if(img && img.complete && !loadedImages[num] && img.naturalWidth > 0) {
                     loadedImages[num] = img;
                     imagesLoadedCount++;
-                    console.log(`✅ Foto ${num} cargada (${imagesLoadedCount}/${totalImages})`);
-                    
-                    if (imagesLoadedCount >= totalImages) {
-                        console.log('🎉 ¡Todas las fotos cargadas!');
-                        initCanvas();
-                    }
+                    if(imagesLoadedCount >= totalImages) initCanvas();
                 }
             };
-            
             setTimeout(() => {
-                for (let i = 1; i <= totalImages; i++) {
-                    const img = document.getElementById('img' + i);
-                    if (img && img.complete && img.naturalWidth > 0 && !loadedImages[i]) {
-                        window.imageLoaded(i);
-                    }
+                for(let i=1;i<=totalImages;i++) {
+                    const img = document.getElementById('img'+i);
+                    if(img && img.complete && img.naturalWidth>0 && !loadedImages[i]) window.imageLoaded(i);
                 }
-                setTimeout(() => {
-                    if (imagesLoadedCount < totalImages) {
-                        console.log('⚠️ Algunas imágenes no cargaron, iniciando con ' + imagesLoadedCount + ' disponibles');
-                        initCanvas();
-                    }
-                }, 2000);
-            }, 500);
+                setTimeout(() => { if(imagesLoadedCount < totalImages) initCanvas(); }, 2000);
+            },500);
             
-            // ========== OVERLAY PARA FOTO AMPLIADA ==========
+            // Overlay foto
             const photoOverlay = document.getElementById('photoOverlay');
             const enlargedPhoto = document.getElementById('enlargedPhoto');
-            const yearMessage = document.getElementById('yearMessage');
+            const yearMessageSpan = document.getElementById('yearMessage');
+            photoOverlay.addEventListener('click', () => photoOverlay.classList.remove('active'));
             
-            photoOverlay.addEventListener('click', function() {
-                photoOverlay.classList.remove('active');
-            });
-            
-            // ========== CANVAS ==========
+            // Canvas y objetos voladores
             const canvas = document.getElementById('heartsCanvas');
             const ctx = canvas.getContext('2d');
-            
-            let width, height;
-            let flyingObjects = [];
-            let canvasInitialized = false;
-            
-            function resizeCanvas() {
-                width = window.innerWidth;
-                height = window.innerHeight;
-                canvas.width = width;
-                canvas.height = height;
-            }
+            let width, height, flyingObjects = [], canvasInitialized = false;
+            function resizeCanvas() { width = window.innerWidth; height = window.innerHeight; canvas.width = width; canvas.height = height; }
             window.addEventListener('resize', resizeCanvas);
             resizeCanvas();
             
             class FlyingPhoto {
-                constructor(imgElement, photoNum) {
-                    this.img = imgElement;
-                    this.photoNum = photoNum;
-                    this.reset();
-                }
-                
+                constructor(img, num) { this.img = img; this.photoNum = num; this.reset(); }
                 reset() {
                     this.x = Math.random() * width * 0.8 + width * 0.1;
                     this.y = Math.random() * height * 0.6 + height * 0.2;
@@ -835,439 +394,320 @@
                     this.opacity = Math.random() * 0.25 + 0.75;
                     this.rotation = (Math.random() - 0.5) * 0.2;
                     this.rotationSpeed = (Math.random() - 0.5) * 0.003;
-                    this.borderRadius = 20;
                     this.borderColor = `rgba(255, ${Math.floor(Math.random()*100+150)}, ${Math.floor(Math.random()*100+150)}, 0.9)`;
                 }
-                
                 update() {
                     this.y -= this.speedY;
                     this.x += this.speedX + Math.sin(this.y * 0.008) * 0.2;
                     this.rotation += this.rotationSpeed;
-                    if (this.y < -this.size * 2) {
-                        this.y = height + this.size;
-                        this.x = Math.random() * width * 0.8 + width * 0.1;
-                    }
+                    if (this.y < -this.size*2) { this.y = height + this.size; this.x = Math.random() * width * 0.8 + width * 0.1; }
                     if (this.x < -this.size) this.x = width + this.size;
                     if (this.x > width + this.size) this.x = -this.size;
                 }
-                
                 draw(ctx) {
-                    if (!this.img || !this.img.complete || this.img.naturalWidth === 0) return;
-                    ctx.save();
-                    ctx.translate(this.x, this.y);
-                    ctx.rotate(this.rotation);
-                    ctx.globalAlpha = this.opacity;
-                    ctx.shadowColor = 'rgba(255, 80, 130, 0.7)';
-                    ctx.shadowBlur = 20;
-                    ctx.strokeStyle = this.borderColor;
-                    ctx.lineWidth = 4;
-                    const halfSize = this.size / 2;
-                    ctx.beginPath();
-                    ctx.roundRect(-halfSize, -halfSize * 0.8, this.size, this.size * 0.8, this.borderRadius);
-                    ctx.clip();
-                    ctx.drawImage(this.img, -halfSize, -halfSize * 0.8, this.size, this.size * 0.8);
-                    ctx.stroke();
-                    ctx.restore();
+                    if(!this.img || !this.img.complete || this.img.naturalWidth===0) return;
+                    ctx.save(); ctx.translate(this.x,this.y); ctx.rotate(this.rotation);
+                    ctx.globalAlpha = this.opacity; ctx.shadowColor = 'rgba(255,80,130,0.7)'; ctx.shadowBlur = 20;
+                    ctx.strokeStyle = this.borderColor; ctx.lineWidth = 4;
+                    const half = this.size/2;
+                    ctx.beginPath(); ctx.roundRect(-half, -half*0.8, this.size, this.size*0.8, 20); ctx.clip();
+                    ctx.drawImage(this.img, -half, -half*0.8, this.size, this.size*0.8); ctx.stroke(); ctx.restore();
                 }
-                
-                isClicked(mouseX, mouseY) {
-                    const halfSize = this.size / 2;
-                    return mouseX >= this.x - halfSize && 
-                           mouseX <= this.x + halfSize && 
-                           mouseY >= this.y - halfSize * 0.8 && 
-                           mouseY <= this.y + halfSize * 0.8;
+                isClicked(mx,my) {
+                    const half = this.size/2;
+                    return mx >= this.x-half && mx <= this.x+half && my >= this.y-half*0.8 && my <= this.y+half*0.8;
                 }
             }
-            
             class FlyingHeart {
-                constructor() {
-                    this.reset();
-                }
-                
-                reset() {
-                    this.x = Math.random() * width;
-                    this.y = Math.random() * height * 0.8 + height * 0.2;
-                    this.size = Math.random() * 22 + 12;
-                    this.speedY = Math.random() * 1.2 + 0.6;
-                    this.speedX = (Math.random() - 0.5) * 0.8;
-                    this.opacity = Math.random() * 0.5 + 0.35;
-                    this.rotation = Math.random() * Math.PI * 2;
-                    this.rotationSpeed = (Math.random() - 0.5) * 0.025;
-                    const r = Math.floor(Math.random() * 60 + 195);
-                    const g = Math.floor(Math.random() * 80 + 80);
-                    const b = Math.floor(Math.random() * 100 + 130);
-                    this.color = `rgba(${r}, ${g}, ${b}, ${this.opacity})`;
-                }
-                
-                update() {
-                    this.y -= this.speedY;
-                    this.x += this.speedX + Math.sin(this.y * 0.02) * 0.35;
-                    this.rotation += this.rotationSpeed;
-                    if (this.y < -this.size * 2.5) {
-                        this.y = height + this.size * 1.5;
-                        this.x = Math.random() * width;
-                    }
-                    if (this.x < -this.size) this.x = width + this.size;
-                    if (this.x > width + this.size) this.x = -this.size;
-                }
-                
-                draw(ctx) {
-                    ctx.save();
-                    ctx.translate(this.x, this.y);
-                    ctx.rotate(this.rotation);
-                    ctx.globalAlpha = this.opacity;
-                    ctx.fillStyle = this.color;
-                    ctx.shadowColor = '#ff3366';
-                    ctx.shadowBlur = 10;
-                    const sz = this.size;
-                    ctx.beginPath();
-                    const topCurveHeight = sz * 0.3;
-                    ctx.moveTo(0, sz * 0.25);
-                    ctx.bezierCurveTo(0, -topCurveHeight, -sz/2, -topCurveHeight, -sz/2, sz*0.25);
-                    ctx.bezierCurveTo(-sz/2, sz*0.65, 0, sz*0.85, 0, sz);
-                    ctx.bezierCurveTo(0, sz*0.85, sz/2, sz*0.65, sz/2, sz*0.25);
-                    ctx.bezierCurveTo(sz/2, -topCurveHeight, 0, -topCurveHeight, 0, sz*0.25);
-                    ctx.fill();
-                    ctx.restore();
-                }
+                constructor(){ this.reset(); }
+                reset(){ this.x=Math.random()*width; this.y=Math.random()*height*0.8+height*0.2; this.size=Math.random()*22+12; this.speedY=Math.random()*1.2+0.6; this.speedX=(Math.random()-0.5)*0.8; this.opacity=Math.random()*0.5+0.35; this.rotation=Math.random()*Math.PI*2; this.rotationSpeed=(Math.random()-0.5)*0.025; this.color=`rgba(${Math.floor(Math.random()*60+195)},${Math.floor(Math.random()*80+80)},${Math.floor(Math.random()*100+130)},${this.opacity})`; }
+                update(){ this.y-=this.speedY; this.x+=this.speedX+Math.sin(this.y*0.02)*0.35; this.rotation+=this.rotationSpeed; if(this.y<-this.size*2.5){ this.y=height+this.size*1.5; this.x=Math.random()*width; } if(this.x<-this.size) this.x=width+this.size; if(this.x>width+this.size) this.x=-this.size; }
+                draw(ctx){ ctx.save(); ctx.translate(this.x,this.y); ctx.rotate(this.rotation); ctx.globalAlpha=this.opacity; ctx.fillStyle=this.color; ctx.shadowBlur=10; ctx.shadowColor='#ff3366'; const sz=this.size; ctx.beginPath(); ctx.moveTo(0,sz*0.25); ctx.bezierCurveTo(0,-sz*0.3,-sz/2,-sz*0.3,-sz/2,sz*0.25); ctx.bezierCurveTo(-sz/2,sz*0.65,0,sz*0.85,0,sz); ctx.bezierCurveTo(0,sz*0.85,sz/2,sz*0.65,sz/2,sz*0.25); ctx.bezierCurveTo(sz/2,-sz*0.3,0,-sz*0.3,0,sz*0.25); ctx.fill(); ctx.restore(); }
             }
-            
             class FlyingBalloon {
-                constructor() {
-                    this.reset();
-                }
-                
-                reset() {
-                    this.x = Math.random() * width;
-                    this.y = Math.random() * height * 0.7 + height * 0.3;
-                    this.size = Math.random() * 20 + 14;
-                    this.speedY = Math.random() * 0.8 + 0.4;
-                    this.speedX = (Math.random() - 0.5) * 0.6;
-                    this.opacity = Math.random() * 0.5 + 0.35;
-                    const colors = ['#ff4d6d', '#ff6b8a', '#ff8da1', '#ff3b5c', '#ff5e7e', '#ffb3c6', '#ff1a4b', '#e84393', '#fd79a8', '#e91e63', '#ff7eb3', '#ff4081'];
-                    this.color = colors[Math.floor(Math.random() * colors.length)];
-                }
-                
-                update() {
-                    this.y -= this.speedY;
-                    this.x += this.speedX + Math.sin(this.y * 0.02) * 0.3;
-                    if (this.y < -this.size * 2.5) {
-                        this.y = height + this.size * 1.5;
-                        this.x = Math.random() * width;
-                    }
-                    if (this.x < -this.size) this.x = width + this.size;
-                    if (this.x > width + this.size) this.x = -this.size;
-                }
-                
-                draw(ctx) {
-                    ctx.save();
-                    ctx.translate(this.x, this.y);
-                    ctx.globalAlpha = this.opacity;
-                    ctx.beginPath();
-                    ctx.moveTo(0, this.size * 0.6);
-                    ctx.quadraticCurveTo(4, this.size * 0.85, -2, this.size * 0.95);
-                    ctx.strokeStyle = '#ffffff';
-                    ctx.lineWidth = 1.2;
-                    ctx.stroke();
-                    ctx.fillStyle = this.color;
-                    ctx.shadowColor = 'rgba(0,0,0,0.3)';
-                    ctx.shadowBlur = 6;
-                    ctx.beginPath();
-                    ctx.ellipse(0, -this.size * 0.1, this.size * 0.5, this.size * 0.65, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.fillStyle = 'rgba(255,255,255,0.25)';
-                    ctx.beginPath();
-                    ctx.ellipse(-this.size*0.12, -this.size*0.2, this.size*0.12, this.size*0.18, 0, 0, Math.PI*2);
-                    ctx.fill();
-                    ctx.fillStyle = this.color;
-                    ctx.shadowBlur = 0;
-                    ctx.beginPath();
-                    ctx.moveTo(-3, this.size * 0.55);
-                    ctx.lineTo(3, this.size * 0.55);
-                    ctx.lineTo(0, this.size * 0.68);
-                    ctx.fill();
-                    ctx.restore();
-                }
+                constructor(){ this.reset(); }
+                reset(){ this.x=Math.random()*width; this.y=Math.random()*height*0.7+height*0.3; this.size=Math.random()*20+14; this.speedY=Math.random()*0.8+0.4; this.speedX=(Math.random()-0.5)*0.6; this.opacity=Math.random()*0.5+0.35; const colors=['#ff4d6d','#ff6b8a','#ff8da1','#ff3b5c','#ff5e7e','#ffb3c6','#ff1a4b','#e84393','#fd79a8','#e91e63','#ff7eb3','#ff4081']; this.color=colors[Math.floor(Math.random()*colors.length)]; }
+                update(){ this.y-=this.speedY; this.x+=this.speedX+Math.sin(this.y*0.02)*0.3; if(this.y<-this.size*2.5){ this.y=height+this.size*1.5; this.x=Math.random()*width; } if(this.x<-this.size) this.x=width+this.size; if(this.x>width+this.size) this.x=-this.size; }
+                draw(ctx){ ctx.save(); ctx.translate(this.x,this.y); ctx.globalAlpha=this.opacity; ctx.beginPath(); ctx.moveTo(0,this.size*0.6); ctx.quadraticCurveTo(4,this.size*0.85,-2,this.size*0.95); ctx.strokeStyle='#fff'; ctx.lineWidth=1.2; ctx.stroke(); ctx.fillStyle=this.color; ctx.shadowBlur=6; ctx.beginPath(); ctx.ellipse(0,-this.size*0.1,this.size*0.5,this.size*0.65,0,0,Math.PI*2); ctx.fill(); ctx.fillStyle='rgba(255,255,255,0.25)'; ctx.beginPath(); ctx.ellipse(-this.size*0.12,-this.size*0.2,this.size*0.12,this.size*0.18,0,0,Math.PI*2); ctx.fill(); ctx.fillStyle=this.color; ctx.shadowBlur=0; ctx.beginPath(); ctx.moveTo(-3,this.size*0.55); ctx.lineTo(3,this.size*0.55); ctx.lineTo(0,this.size*0.68); ctx.fill(); ctx.restore(); }
             }
             
             function initCanvas() {
-                if (canvasInitialized) return;
+                if(canvasInitialized) return;
                 canvasInitialized = true;
-                
                 flyingObjects = [];
-                
-                for (let i = 1; i <= 12; i++) {
-                    if (loadedImages[i]) {
-                        flyingObjects.push(new FlyingPhoto(loadedImages[i], i));
-                    }
-                }
-                
-                const heartCount = Math.min(55, Math.floor(width / 18));
-                for (let i = 0; i < heartCount; i++) {
-                    flyingObjects.push(new FlyingHeart());
-                }
-                
-                const balloonCount = Math.min(12, Math.floor(width / 40));
-                for (let i = 0; i < balloonCount; i++) {
-                    flyingObjects.push(new FlyingBalloon());
-                }
-                
-                console.log(`✨ Animación: ${flyingObjects.filter(o => o instanceof FlyingPhoto).length} fotos | ${flyingObjects.filter(o => o instanceof FlyingHeart).length} corazones | ${flyingObjects.filter(o => o instanceof FlyingBalloon).length} globos`);
-                
+                for(let i=1;i<=12;i++) if(loadedImages[i]) flyingObjects.push(new FlyingPhoto(loadedImages[i], i));
+                for(let i=0;i<Math.min(55,Math.floor(width/18));i++) flyingObjects.push(new FlyingHeart());
+                for(let i=0;i<Math.min(12,Math.floor(width/40));i++) flyingObjects.push(new FlyingBalloon());
                 animateCanvas();
             }
-            
-            canvas.addEventListener('click', function(e) {
-                if (!canvasInitialized) return;
+            canvas.addEventListener('click', (e) => {
+                if(!canvasInitialized) return;
                 const rect = canvas.getBoundingClientRect();
-                const mouseX = e.clientX - rect.left;
-                const mouseY = e.clientY - rect.top;
-                const photos = flyingObjects.filter(o => o instanceof FlyingPhoto).reverse();
-                for (let photo of photos) {
-                    if (photo.isClicked(mouseX, mouseY)) {
-                        showPhotoOverlay(photo.photoNum);
-                        break;
-                    }
-                }
+                const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+                const photos = flyingObjects.filter(o=>o instanceof FlyingPhoto).reverse();
+                for(let p of photos) if(p.isClicked(mx,my)) { showPhotoOverlay(p.photoNum); break; }
             });
-            
-            function showPhotoOverlay(photoNum) {
-                const img = loadedImages[photoNum];
-                if (!img) return;
-                enlargedPhoto.src = img.src;
-                yearMessage.textContent = yearMessages[photoNum] || '💖 Recuerdo especial con Nely 💖';
-                photoOverlay.classList.add('active');
+            function showPhotoOverlay(num) {
+                const img = loadedImages[num];
+                if(img) { enlargedPhoto.src = img.src; yearMessageSpan.textContent = yearMessages[num] || '💖 Recuerdo especial 💖'; photoOverlay.classList.add('active'); }
             }
-            
             function animateCanvas() {
-                if (!canvasInitialized) {
-                    requestAnimationFrame(animateCanvas);
-                    return;
-                }
-                ctx.clearRect(0, 0, width, height);
-                for (let obj of flyingObjects) {
-                    obj.update();
-                    obj.draw(ctx);
-                }
+                if(!canvasInitialized){ requestAnimationFrame(animateCanvas); return; }
+                ctx.clearRect(0,0,width,height);
+                for(let obj of flyingObjects) { obj.update(); obj.draw(ctx); }
                 requestAnimationFrame(animateCanvas);
             }
-            
             animateCanvas();
             
-            window.addEventListener('resize', () => {
-                if (canvasInitialized) {
-                    const photoObjects = flyingObjects.filter(o => o instanceof FlyingPhoto);
-                    flyingObjects = [...photoObjects];
-                    const newHeartCount = Math.min(55, Math.floor(width / 18));
-                    for (let i = 0; i < newHeartCount; i++) {
-                        flyingObjects.push(new FlyingHeart());
-                    }
-                    const newBalloonCount = Math.min(12, Math.floor(width / 40));
-                    for (let i = 0; i < newBalloonCount; i++) {
-                        flyingObjects.push(new FlyingBalloon());
-                    }
+            // NOTIFICACIÓN BLOQUEANTE GENÉRICA
+            function showBlockingNotification(message, icon, durationSeconds, onComplete) {
+                const blocker = document.createElement('div');
+                blocker.className = 'notification-blocker';
+                document.body.appendChild(blocker);
+                const notif = document.createElement('div');
+                notif.className = 'generic-notification';
+                notif.innerHTML = `
+                    <div class="icon">${icon}</div>
+                    <div class="message">${message}</div>
+                    <div class="timer">(Espera ${durationSeconds} segundos)</div>
+                `;
+                document.body.appendChild(notif);
+                notif.style.display = 'flex';
+                notif.style.opacity = '0';
+                setTimeout(() => notif.style.opacity = '1', 10);
+                const timer = setTimeout(() => {
+                    notif.remove();
+                    blocker.remove();
+                    if (onComplete) onComplete();
+                }, durationSeconds * 1000);
+                return { blocker, notif, timer };
+            }
+            
+            // CONFIRMACIÓN Y FLUJO
+            const confirmOverlay = document.getElementById('confirmOverlay');
+            const enterOverlay = document.getElementById('enterOverlay');
+            const acceptBtn = document.getElementById('acceptConfirmBtn');
+            const enterButton = document.getElementById('enterButton');
+            const CONFIRM_KEY = 'nely_cita_confirmada';
+            let confirmed = localStorage.getItem(CONFIRM_KEY) === 'true';
+            
+            function showConfirmOverlay() {
+                if (!confirmed) {
+                    confirmOverlay.classList.add('active');
+                } else {
+                    enterOverlay.classList.add('active');
                 }
+            }
+            
+            acceptBtn.addEventListener('click', () => {
+                localStorage.setItem(CONFIRM_KEY, 'true');
+                confirmed = true;
+                confirmOverlay.classList.remove('active');
+                const citaTexto = "✅ Cita confirmada para el domingo 24/05 a las 11:00 (medianoche) en el Cruce Bolognesi. ¡Gracias, Nely! 💖";
+                showBlockingNotification(citaTexto, "💖📅", 7, () => {
+                    enterOverlay.classList.add('active');
+                });
             });
             
-            canvas.style.cursor = 'pointer';
-            
-            // ========== LÓGICA DEL DÍA DEL ANIVERSARIO CON BOTÓN "ENTRAR" ==========
             const countdownPage = document.getElementById('countdownPage');
             const anniversaryPage = document.getElementById('anniversaryPage');
-            const enterOverlay = document.getElementById('enterOverlay');
-            const enterButton = document.getElementById('enterButton');
             let anniversaryShown = false;
-            
-            // Al hacer clic en "ENTRAR", mostrar la página de aniversario
-            enterButton.addEventListener('click', function() {
-                enterOverlay.classList.remove('active');
-                countdownPage.style.display = 'none';
-                anniversaryPage.style.display = 'block';
-                anniversaryShown = true;
-                launchConfetti();
-                startAnniversaryCounter();
-                document.title = '💖 ¡Feliz Aniversario Nely! 💖';
-            });
             
             function checkDateAndSwitch() {
                 const now = new Date();
-                
                 if (now >= anniversaryDate && !anniversaryShown) {
-                    // Mostrar el overlay con el botón "ENTRAR"
                     countdownPage.style.display = 'none';
                     anniversaryPage.style.display = 'none';
-                    enterOverlay.classList.add('active');
-                    document.title = '💖 ¡Llegó el día! • Nely 💖';
+                    enterOverlay.classList.remove('active');
+                    showConfirmOverlay();
                 } else if (now < anniversaryDate) {
-                    // Mostrar cuenta regresiva
                     countdownPage.style.display = 'block';
                     anniversaryPage.style.display = 'none';
+                    confirmOverlay.classList.remove('active');
                     enterOverlay.classList.remove('active');
                     updateCountdown();
                 }
-                // Si ya se mostró el aniversario, no hacer nada
             }
             
-            // ========== ACTUALIZAR CUENTA REGRESIVA ==========
             function updateCountdown() {
-                const now = new Date();
-                const diffMs = anniversaryDate - now;
-                
-                if (diffMs <= 0) {
-                    checkDateAndSwitch();
-                    return;
-                }
-                
-                const diffSeconds = Math.floor(diffMs / 1000);
-                const days = Math.floor(diffSeconds / 86400);
-                const hours = Math.floor((diffSeconds % 86400) / 3600);
-                const minutes = Math.floor((diffSeconds % 3600) / 60);
-                const seconds = diffSeconds % 60;
-                
-                document.getElementById('countdownDays').textContent = days;
-                document.getElementById('countdownHours').textContent = hours;
-                document.getElementById('countdownMinutes').textContent = minutes;
-                document.getElementById('countdownSeconds').textContent = seconds;
-                
-                document.title = `Faltan ${days} días • Nely 💖`;
+                const diff = anniversaryDate - new Date();
+                if(diff <= 0) { checkDateAndSwitch(); return; }
+                const sec = Math.floor(diff/1000);
+                document.getElementById('countdownDays').textContent = Math.floor(sec/86400);
+                document.getElementById('countdownHours').textContent = Math.floor((sec%86400)/3600);
+                document.getElementById('countdownMinutes').textContent = Math.floor((sec%3600)/60);
+                document.getElementById('countdownSeconds').textContent = sec%60;
             }
             
-            // ========== CONTADOR DE TIEMPO JUNTOS ==========
-            function startAnniversaryCounter() {
-                const relationshipStart = new Date(2022, 4, 24);
-                
-                function update() {
-                    const now = new Date();
-                    const diffMs = now - relationshipStart;
-                    if (diffMs < 0) return;
-                    
-                    const diffSeconds = Math.floor(diffMs / 1000);
-                    const days = Math.floor(diffSeconds / 86400);
-                    const hours = Math.floor((diffSeconds % 86400) / 3600);
-                    const minutes = Math.floor((diffSeconds % 3600) / 60);
-                    const seconds = diffSeconds % 60;
-                    
-                    document.getElementById('daysCount').textContent = days;
-                    document.getElementById('hoursCount').textContent = hours;
-                    document.getElementById('minutesCount').textContent = minutes;
-                    document.getElementById('secondsCount').textContent = seconds;
-                }
-                
-                update();
-                setInterval(update, 1000);
-            }
-            
-            // ========== CONFETI ==========
-            function launchConfetti() {
-                const container = document.getElementById('confettiContainer');
-                const colors = ['#ff4d6d', '#ffb3c6', '#ff8da1', '#ff1a4b', '#ffb6c1', '#ffffff', '#ff99aa', '#ffd0d9', '#ff3864', '#ff6b8a'];
-                
-                function createConfetti() {
-                    for (let i = 0; i < 40; i++) {
-                        const confetti = document.createElement('div');
-                        confetti.className = 'confetti';
-                        confetti.style.left = Math.random() * 100 + '%';
-                        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                        confetti.style.animationDelay = Math.random() * 2 + 's';
-                        confetti.style.animationDuration = (Math.random() * 3 + 3) + 's';
-                        confetti.style.width = (Math.random() * 10 + 6) + 'px';
-                        confetti.style.height = (Math.random() * 10 + 6) + 'px';
-                        confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-                        container.appendChild(confetti);
-                        setTimeout(() => confetti.remove(), 6000);
-                    }
-                }
-                
-                createConfetti();
-                setInterval(createConfetti, 8000);
-            }
-            
-            // ========== VERIFICAR CADA SEGUNDO ==========
-            checkDateAndSwitch();
-            setInterval(checkDateAndSwitch, 1000);
-            
-            // ========== BOTÓN SORPRESA ==========
-            document.getElementById('surpriseBtn').addEventListener('click', function() {
-                alert('💖 Nely, cada latido de mi corazón pronuncia tu nombre. ¡Gracias por estos 4 años maravillosos! Te amo infinitamente. 💖');
-                const bigHeart = document.createElement('div');
-                bigHeart.textContent = '💘';
-                bigHeart.style.position = 'fixed';
-                bigHeart.style.top = '50%';
-                bigHeart.style.left = '50%';
-                bigHeart.style.transform = 'translate(-50%, -50%)';
-                bigHeart.style.fontSize = '8rem';
-                bigHeart.style.zIndex = '999';
-                bigHeart.style.pointerEvents = 'none';
-                bigHeart.style.animation = 'floatUp 2.4s ease-out forwards';
-                document.body.appendChild(bigHeart);
-                setTimeout(() => bigHeart.remove(), 2400);
+            // EVENTO BOTÓN ENTRAR
+            enterButton.addEventListener('click', () => {
+                showBlockingNotification("✨ Preparando la magia para ti... ✨", "💖✨", 7, () => {
+                    enterOverlay.classList.remove('active');
+                    countdownPage.style.display = 'none';
+                    anniversaryPage.style.display = 'block';
+                    anniversaryShown = true;
+                    launchConfetti();
+                    startAnniversaryCounter();
+                    document.title = '💖 ¡Feliz Aniversario Nely! 💖';
+                    startBackgroundMusic();
+                });
+                enterButton.disabled = true;
+                setTimeout(() => { enterButton.disabled = false; }, 7000);
             });
             
-            // ========== MÚSICA ROMÁNTICA ==========
-            document.getElementById('playMusicBtn').addEventListener('click', function() {
+            function startAnniversaryCounter() {
+                const start = new Date(2022,4,24);
+                setInterval(() => {
+                    const now = new Date();
+                    const diff = Math.floor((now - start)/1000);
+                    if(diff>0) {
+                        document.getElementById('daysCount').textContent = Math.floor(diff/86400);
+                        document.getElementById('hoursCount').textContent = Math.floor((diff%86400)/3600);
+                        document.getElementById('minutesCount').textContent = Math.floor((diff%3600)/60);
+                        document.getElementById('secondsCount').textContent = diff%60;
+                    }
+                },1000);
+            }
+            
+            function launchConfetti() {
+                const container = document.getElementById('confettiContainer');
+                const colors = ['#ff4d6d','#ffb3c6','#ff8da1','#ff1a4b','#ffb6c1','#ffffff','#ff99aa','#ffd0d9','#ff3864'];
+                function create() {
+                    for(let i=0;i<40;i++) {
+                        const c = document.createElement('div');
+                        c.className = 'confetti';
+                        c.style.left = Math.random()*100+'%';
+                        c.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+                        c.style.animationDelay = Math.random()*2+'s';
+                        c.style.animationDuration = (Math.random()*3+3)+'s';
+                        c.style.width = (Math.random()*10+6)+'px';
+                        c.style.height = (Math.random()*10+6)+'px';
+                        c.style.borderRadius = Math.random()>0.5?'50%':'2px';
+                        container.appendChild(c);
+                        setTimeout(()=>c.remove(),6000);
+                    }
+                }
+                create();
+                setInterval(create,8000);
+            }
+            
+            setInterval(checkDateAndSwitch, 1000);
+            checkDateAndSwitch();
+            
+            // BOTONES ADICIONALES
+            document.getElementById('surpriseBtn').addEventListener('click', () => {
+                alert('💖 Nely, cada latido de mi corazón pronuncia tu nombre. ¡Gracias por estos 4 años maravillosos! Te amo infinitamente. 💖');
+                const heart = document.createElement('div');
+                heart.textContent = '💘';
+                heart.style.position = 'fixed'; heart.style.top='50%'; heart.style.left='50%';
+                heart.style.transform='translate(-50%,-50%)'; heart.style.fontSize='8rem';
+                heart.style.zIndex='999'; heart.style.pointerEvents='none';
+                heart.style.animation = 'floatUpHeart 2.4s ease-out forwards';
+                document.body.appendChild(heart);
+                setTimeout(()=>heart.remove(),2400);
+            });
+            
+            document.getElementById('playMusicBtn').addEventListener('click', () => {
                 try {
-                    const AudioContext = window.AudioContext || window.webkitAudioContext;
-                    const audioCtx = new AudioContext();
+                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                    const audioCtx = new AudioCtx();
                     const now = audioCtx.currentTime;
-                    const melody = [
-                        { freq: 523.25, dur: 0.4 }, { freq: 587.33, dur: 0.4 },
-                        { freq: 659.25, dur: 0.5 }, { freq: 698.46, dur: 0.3 },
-                        { freq: 783.99, dur: 0.6 }, { freq: 880.00, dur: 0.5 },
-                        { freq: 783.99, dur: 0.4 }, { freq: 659.25, dur: 0.7 }
-                    ];
-                    let timeOffset = 0;
-                    melody.forEach(note => {
-                        const osc = audioCtx.createOscillator();
-                        const gain = audioCtx.createGain();
-                        osc.type = 'sine';
-                        osc.frequency.value = note.freq;
-                        gain.gain.setValueAtTime(0.18, now + timeOffset);
-                        gain.gain.exponentialRampToValueAtTime(0.001, now + timeOffset + note.dur - 0.05);
-                        osc.connect(gain);
-                        gain.connect(audioCtx.destination);
-                        osc.start(now + timeOffset);
-                        osc.stop(now + timeOffset + note.dur);
-                        timeOffset += note.dur;
-                    });
+                    const melody = [{freq:523.25,dur:0.4},{freq:587.33,dur:0.4},{freq:659.25,dur:0.5},{freq:698.46,dur:0.3},{freq:783.99,dur:0.6},{freq:880.00,dur:0.5},{freq:783.99,dur:0.4},{freq:659.25,dur:0.7}];
+                    let offset=0;
+                    melody.forEach(n=>{ const osc=audioCtx.createOscillator(); const gain=audioCtx.createGain(); osc.type='sine'; osc.frequency.value=n.freq; gain.gain.setValueAtTime(0.18,now+offset); gain.gain.exponentialRampToValueAtTime(0.001,now+offset+n.dur-0.05); osc.connect(gain); gain.connect(audioCtx.destination); osc.start(now+offset); osc.stop(now+offset+n.dur); offset+=n.dur; });
                     const btn = document.getElementById('playMusicBtn');
                     btn.textContent = '🎵 Melodía para Nely...';
                     btn.style.background = '#ff3864';
-                    setTimeout(() => {
-                        btn.textContent = '🎵 Música romántica';
-                        btn.style.background = '';
-                    }, 4000);
-                } catch (e) {
-                    alert('🎶 Suena nuestra canción favorita en el corazón... 🎶');
+                    setTimeout(()=>{ btn.textContent = '🎵 Música romántica'; btn.style.background = ''; },4000);
+                } catch(e){ alert('🎶 Suena nuestra canción favorita en el corazón... 🎶'); }
+            });
+            
+            document.querySelectorAll('.mini-photo img').forEach((img,idx) => img.addEventListener('click', (e)=>{ e.stopPropagation(); showPhotoOverlay(idx+1); }));
+            document.getElementById('mainPhotoDisplay')?.addEventListener('click', function(){
+                const img = this.querySelector('img');
+                if(img && Object.keys(loadedImages).length){
+                    const keys = Object.keys(loadedImages);
+                    img.src = loadedImages[keys[Math.floor(Math.random()*keys.length)]].src;
                 }
             });
             
-            // ========== CLIC EN FOTOS DE LA GALERÍA ==========
-            document.querySelectorAll('.mini-photo img').forEach((img, index) => {
-                img.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const photoNum = index + 1;
-                    showPhotoOverlay(photoNum);
-                });
-            });
-            
-            // ========== CLIC EN FOTO PRINCIPAL ==========
-            const mainDisplay = document.getElementById('mainPhotoDisplay');
-            if (mainDisplay.querySelector('img')) {
-                mainDisplay.addEventListener('click', function() {
-                    const currentImg = mainDisplay.querySelector('img');
-                    if (currentImg && Object.keys(loadedImages).length > 0) {
-                        const keys = Object.keys(loadedImages);
-                        const randomKey = keys[Math.floor(Math.random() * keys.length)];
-                        currentImg.src = loadedImages[randomKey].src;
-                    }
-                });
+            // MAGIA ADICIONAL
+            function createStars() {
+                const starsDiv = document.getElementById('starsBg');
+                for(let i=0;i<200;i++) {
+                    const s = document.createElement('div');
+                    s.className = 'star';
+                    s.style.left = Math.random()*100+'%';
+                    s.style.top = Math.random()*100+'%';
+                    s.style.width = Math.random()*3+1+'px';
+                    s.style.height = s.style.width;
+                    s.style.animationDelay = Math.random()*5+'s';
+                    starsDiv.appendChild(s);
+                }
             }
+            createStars();
             
-            console.log('💖💖💖 Página lista para Nely 💖💖💖');
-            console.log('📸 12 fotos GRANDES voladoras + corazones + globos');
-            console.log('👆 Clic en fotos voladoras = mensaje del año');
-            console.log('🎁 Día del aniversario: Botón "ENTRAR" para descubrir la sorpresa');
-            console.log('📅 Aniversario: 24 de Mayo de 2026');
+            const loveMessagesList = ["Te amo", "Eres mi vida", "Mi princesa", "Amor infinito", "Eres mi sol", "❤️ Nely ❤️", "Eres única", "Mi todo", "Te adoro", "Eres magia"];
+            setInterval(() => {
+                const container = document.getElementById('floatingMessages');
+                const msgDiv = document.createElement('div');
+                msgDiv.className = 'float-msg';
+                msgDiv.textContent = loveMessagesList[Math.floor(Math.random()*loveMessagesList.length)];
+                msgDiv.style.left = Math.random()*80+10+'%';
+                msgDiv.style.fontSize = (Math.random()*1.2+1.2)+'rem';
+                msgDiv.style.animationDuration = (Math.random()*4+5)+'s';
+                container.appendChild(msgDiv);
+                setTimeout(()=>msgDiv.remove(),6000);
+            }, 9000);
+            
+            const quotesList = ["💖 'A tu lado, el tiempo no existe, solo la eternidad' 💖","🌹 'Eres la dueña de todos mis latidos' 🌹","✨ 'Nely, eres el sueño del que no quiero despertar' ✨","💕 'Cada día contigo es mi día favorito' 💕","🌟 'Tu amor es mi mayor aventura' 🌟","💘 'Gracias por hacer de mi vida un cuento de hadas' 💘"];
+            let qIdx = 0;
+            setInterval(() => {
+                const qDiv = document.getElementById('romanticQuote');
+                qDiv.style.opacity = '0';
+                setTimeout(()=>{ qDiv.textContent = quotesList[qIdx%quotesList.length]; qDiv.style.opacity='1'; qIdx++; },500);
+            }, 8000);
+            
+            function heartRain() {
+                const container = document.getElementById('confettiContainer');
+                for(let i=0;i<30;i++) {
+                    const heart = document.createElement('div');
+                    heart.innerHTML = '❤️';
+                    heart.style.position = 'absolute';
+                    heart.style.left = Math.random()*100+'%';
+                    heart.style.fontSize = (Math.random()*20+15)+'px';
+                    heart.style.top = '-20px';
+                    heart.style.opacity = '0.9';
+                    heart.style.animation = `confettiFall ${Math.random()*3+2}s linear forwards`;
+                    heart.style.pointerEvents = 'none';
+                    container.appendChild(heart);
+                    setTimeout(()=>heart.remove(),5000);
+                }
+            }
+            const extraHeartBtn = document.createElement('button');
+            extraHeartBtn.innerHTML = '💖 Lluvia de corazones 💖';
+            extraHeartBtn.onclick = heartRain;
+            document.getElementById('surpriseBtn').insertAdjacentElement('afterend', extraHeartBtn);
+            
+            const loveLetterBtn = document.createElement('button');
+            loveLetterBtn.innerHTML = '💌 Leer carta de amor 💌';
+            loveLetterBtn.onclick = () => document.getElementById('loveLetterOverlay').classList.add('active');
+            document.getElementById('surpriseBtn').insertAdjacentElement('afterend', loveLetterBtn);
+            document.getElementById('closeLetterBtn').addEventListener('click', () => document.getElementById('loveLetterOverlay').classList.remove('active'));
+            
+            const musicControlBtn = document.createElement('button');
+            musicControlBtn.id = 'toggleBgMusicBtn';
+            musicControlBtn.innerHTML = '🎵 Silenciar música';
+            musicControlBtn.className = 'music-control-btn';
+            musicControlBtn.onclick = () => {
+                if(bgMusic && !bgMusic.paused) { bgMusic.pause(); musicControlBtn.innerHTML = '🎵 Activar música'; }
+                else if(bgMusic) { bgMusic.play(); musicControlBtn.innerHTML = '🔇 Silenciar música'; }
+                else { startBackgroundMusic(); musicControlBtn.innerHTML = '🔇 Silenciar música'; }
+            };
+            const playMusicBtn = document.getElementById('playMusicBtn');
+            if(playMusicBtn) playMusicBtn.insertAdjacentElement('afterend', musicControlBtn);
+            
+            console.log('✨✨✨ MÁGICA ROMÁNTICA CON NOTIFICACIONES INTERNAS DE 7 SEGUNDOS ✨✨✨');
         })();
     </script>
 </body>
